@@ -1,0 +1,24 @@
+package com.najiujiangzi.jiangzi.mappers;
+
+import com.najiujiangzi.jiangzi.dto.UserRoleDTO;
+import com.najiujiangzi.jiangzi.model.UserRole;
+import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+public interface UserRoleMapper {
+
+    @Select("<script>" +
+            " SELECT * FROM sys_user_role" +
+            " <where>" +
+            " 1 = 1" +
+            " <if test=\"dto.id != null\">AND id = #{dto.id}</if>" +
+            " <if test=\"dto.userId != null\">AND user_id = #{dto.userId}</if>" +
+            " <if test=\"dto.roleId != null\">AND role_id = #{dto.roleId}</if>" +
+            " <if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
+            "</where>" +
+            "</script>")
+    List<UserRole> find(@Param("dto")UserRoleDTO dto, @Param("page")Page page);
+}

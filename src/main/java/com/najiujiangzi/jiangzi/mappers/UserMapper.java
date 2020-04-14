@@ -22,6 +22,7 @@ public interface UserMapper {
             " <if test=\"user.phone != null\">AND phone = #{user.phone}</if>" +
             " <if test=\"user.likeFind != null\">AND name LIKE concat('%',#{user.likeFind},'%')</if>" +
             " <if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
+            " AND deleted = 0" +
             "</where>" +
             "</script>")
     List<User> find(@Param("user") UserDTO dto, @Param("page") Page page);
@@ -36,9 +37,14 @@ public interface UserMapper {
             " <if test=\"email != null\">AND email = #{email}</if>" +
             " <if test=\"phone != null\">AND phone = #{phone}</if>" +
             " <if test=\"likeFind != null\">AND name LIKE concat('%',#{likeFind},'%')</if>" +
+            " <if test=\"token != null\">AND token = #{token}</if>" +
+            " <if test=\"deleted != null\">AND deleted = #{deleted}</if>" +
             " LIMIT 1" +
             "</where>" +
             "</script>")
-    User findOne(UserDTO dto);
+    UserDTO findOne(UserDTO dto);
+
+    @Select("SELECT u.*, r.* FROM sys_user u left join sys_user_role ur on u.id = ur.user_id left join sys_role r on ur.role_id = r.id where u.id = #{id}")
+    List<User> findById(Long id);
 
 }

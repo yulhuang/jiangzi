@@ -16,8 +16,11 @@ CREATE TABLE `sys_user` (
   `birthday` datetime DEFAULT NULL COMMENT '出生日期',
   `email` varchar(20) DEFAULT NULL COMMENT '邮箱',
   `phone` varchar(11) DEFAULT NULL COMMENT '电话号码',
+  `password` varchar(50) NOT NULL COMMENT '密码',
   `create` datetime DEFAULT NULL COMMENT '创建时间',
   `update` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `token` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1519 DEFAULT CHARSET=utf8;
 
@@ -27,6 +30,7 @@ CREATE TABLE `sys_role` (
   `describe` varchar(255) DEFAULT NULL COMMENT '描述',
   `create` datetime DEFAULT NULL COMMENT '创建时间',
   `update` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1519 DEFAULT CHARSET=utf8;
 

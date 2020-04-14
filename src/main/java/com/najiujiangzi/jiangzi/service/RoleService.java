@@ -17,4 +17,8 @@ public class RoleService {
     List<Role> find(RoleDTO dto, Page page) {
         return roleMapper.find(dto, page);
     }
+
+    List<Role> findByUserId(Long userId) {
+        return roleMapper.findByUserId(userId);
+    }
 }

@@ -22,7 +22,7 @@ public class UserService {
         return userMapper.find(new UserDTO(), null);
     }
 
-    public User findOne(UserDTO dto) {
+    public UserDTO findOne(UserDTO dto) {
         return userMapper.findOne(dto);
     }
 }

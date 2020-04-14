@@ -17,11 +17,14 @@ public interface RoleMapper {
             " <if test=\"role.id != null\">AND id = #{role.id}</if>" +
             " <if test=\"role.name != null\">AND name = #{role.name}</if>" +
             " <if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
+            " AND deleted = 0" +
             "</where>" +
             "</script>")
     List<Role> find(@Param("role")RoleDTO dto, @Param("page")Page page);
 
-    @Select("SELECT * FROM sys_role WHERE user_id = #{userId}")
+    @Select("SELECT r.* FROM sys_role r LEFT JOIN sys_user_role ur ON r.id = ur.role_id" +
+            " LEFT JOIN sys_user u ON ur.user_id = u.id " +
+            " WHERE u.id = #{userId} AND u.deleted = 0")
     List<Role> findByUserId(Long userId);
 
 

@@ -9,6 +9,15 @@ public class Role {
     private String describe;
     private LocalDateTime create;
     private LocalDateTime update;
+    private Boolean deleted;
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public Long getId() {
         return id;
@@ -58,6 +67,7 @@ public class Role {
                 ", describe='" + describe + '\'' +
                 ", create=" + create +
                 ", update=" + update +
+                ", deleted=" + deleted +
                 '}';
     }
 }

@@ -9,8 +9,11 @@ public class User {
     private LocalDateTime birthday;
     private String email;
     private String phone;
+    private String password;
     private LocalDateTime create;
     private LocalDateTime update;
+    private Boolean deleted;
+    private String token;
 
     @Override
     public String toString() {
@@ -21,9 +24,36 @@ public class User {
                 ", birthday=" + birthday +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
                 ", create=" + create +
                 ", update=" + update +
+                ", deleted=" + deleted +
+                ", token=" + token +
                 '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Long getId() {

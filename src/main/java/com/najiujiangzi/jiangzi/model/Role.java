@@ -2,72 +2,57 @@ package com.najiujiangzi.jiangzi.model;
 
 import java.time.LocalDateTime;
 
+
 public class Role {
-    private Long id;
-    private String name;
-    //角色描述
-    private String describe;
-    private LocalDateTime create;
-    private LocalDateTime update;
-    private Boolean deleted;
+	private Long id;
+	private String name;
+	private String describe;
+	private LocalDateTime create;
+	private LocalDateTime update;
+	private Boolean deleted;
 
-    public Boolean getDeleted() {
-        return deleted;
-    }
 
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
 
-    public Long getId() {
-        return id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Long getId() {
+		return this.id;
+		}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getName() {
+		return this.name;
+		}
 
-    public String getName() {
-        return name;
-    }
+	public void setDescribe(String describe) {
+		this.describe = describe;
+	}
+	public String getDescribe() {
+		return this.describe;
+		}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setCreate(LocalDateTime create) {
+		this.create = create;
+	}
+	public LocalDateTime getCreate() {
+		return this.create;
+		}
 
-    public String getDescribe() {
-        return describe;
-    }
+	public void setUpdate(LocalDateTime update) {
+		this.update = update;
+	}
+	public LocalDateTime getUpdate() {
+		return this.update;
+		}
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
-    }
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+	public Boolean getDeleted() {
+		return this.deleted;
+		}
 
-    public LocalDateTime getCreate() {
-        return create;
-    }
-
-    public void setCreate(LocalDateTime create) {
-        this.create = create;
-    }
-
-    public LocalDateTime getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(LocalDateTime update) {
-        this.update = update;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", describe='" + describe + '\'' +
-                ", create=" + create +
-                ", update=" + update +
-                ", deleted=" + deleted +
-                '}';
-    }
 }

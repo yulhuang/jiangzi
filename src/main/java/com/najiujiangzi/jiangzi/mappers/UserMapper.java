@@ -3,8 +3,10 @@ package com.najiujiangzi.jiangzi.mappers;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -26,6 +28,12 @@ public interface UserMapper {
             "</where>" +
             "</script>")
     List<User> find(@Param("user") UserDTO dto, @Param("page") Page page);
+
+    @Insert("insert into sys_user(name, gender, email, phone)  values(#{name},#{gender},#{email},#{phone})")
+    Long insert(@Param("dto")UserDTO dto);
+
+    @Update("update user set name=#{name},pwd=#{pwd} where id=#{id}")
+    Long update(UserDTO dto);
 
     @Select("<script>" +
             " SELECT * FROM sys_user" +

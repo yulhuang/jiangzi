@@ -14,11 +14,15 @@ public class RoleService {
     @Autowired
     private RoleMapper roleMapper;
 
-    List<Role> find(RoleDTO dto, Page page) {
+    public List<Role> find(RoleDTO dto, Page page) {
         return roleMapper.find(dto, page);
     }
 
-    List<Role> findByUserId(Long userId) {
-        return roleMapper.findByUserId(userId);
+    public Role findOne() {
+        return this.find(new RoleDTO(), null).get(0);
+    }
+
+    public List<Role> findByUserId(Long userId) {
+         return roleMapper.findByUserId(userId);
     }
 }

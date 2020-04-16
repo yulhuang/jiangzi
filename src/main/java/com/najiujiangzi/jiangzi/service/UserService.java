@@ -18,11 +18,15 @@ public class UserService {
         return userMapper.find(dto, page);
     }
 
-    public List<User> findAll() {
-        return userMapper.find(new UserDTO(), null);
-    }
-
     public UserDTO findOne(UserDTO dto) {
         return userMapper.findOne(dto);
+    }
+
+    public Long insert(UserDTO dto) {
+        return userMapper.insert(dto);
+    }
+
+    public Long update(UserDTO dto) {
+        return userMapper.update(dto);
     }
 }

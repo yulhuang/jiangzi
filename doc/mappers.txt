@@ -16,13 +16,13 @@ public interface @mapperName {
             " SELECT * FROM @tableName" +
             " <where>" +
             " 1 = 1" +
-@if            "<if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
-            "</where>" +
+@if            " <if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
+            " </where>" +
             "</script>")
     List<@modelName> find(@Param("dto") @dtoName dto, @Param("page") Page page);
 
     @Insert("insert into @tableName(@insertField)  values(@dtoFields)")
-    Long insert(@Param("dto")@dtoName dto);
+    Long insert(@Param("model")@modelName model);
 
     @Update("update @tableName set @set where id=#{id}")
     Long update(@dtoName dto);

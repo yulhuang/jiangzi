@@ -1,4 +1,4 @@
-package com.najiujiangzi.jiangzi.config.SecurityConfig;
+package com.najiujiangzi.jiangzi.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.najiujiangzi.jiangzi.service.MyUserDetailService;
@@ -40,10 +40,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
+    public static BCryptPasswordEncoder getEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login/home", "/login/toLogin", "/login/out").permitAll()
+                //主页接口和登录接口谁都可以访问
+                .antMatchers("/home/**", "/login/**").permitAll()
                 .antMatchers("/login/test").hasRole("ADMIN")
                 .anyRequest().authenticated() // 其余所有路径都要求用户登陆
                 .and()
@@ -106,7 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setUserDetailsService(myUserDetailService);
         //为true时用户名是否错误都会抛BadCredentialsException异常，为false时用户名错误抛UsernameNotFoundException异常而密码错误抛出BadCredentialsException异常
         authenticationProvider.setHideUserNotFoundExceptions(false);
-        authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        authenticationProvider.setPasswordEncoder(getEncoder());
         return authenticationProvider;
     }
 

@@ -3,6 +3,7 @@ package com.najiujiangzi.jiangzi.mappers;
 import com.najiujiangzi.jiangzi.dto.UserRoleDTO;
 import com.najiujiangzi.jiangzi.model.UserRole;
 import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -21,4 +22,7 @@ public interface UserRoleMapper {
             "</where>" +
             "</script>")
     List<UserRole> find(@Param("dto")UserRoleDTO dto, @Param("page")Page page);
+
+    @Insert("INSERT INTO sys_user_role(user_id, role_id) values(#{userId}, (select id from sys_role where name = 'COMMON'))")
+    Long insertCommonUser(Long userId);
 }

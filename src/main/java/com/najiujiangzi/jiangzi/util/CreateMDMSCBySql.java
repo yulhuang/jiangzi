@@ -14,15 +14,26 @@ import java.util.regex.Pattern;
  */
 public class CreateMDMSCBySql {
     public static void main(String[] args) throws Exception {
-        String sql = "CREATE TABLE `sys_test` (\n" +
-                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色id',\n" +
-                "  `name` varchar(10) NOT NULL COMMENT '角色名',\n" +
-                "  `describe` varchar(255) DEFAULT NULL COMMENT '描述',\n" +
-                "  `create` datetime DEFAULT NULL COMMENT '创建时间',\n" +
-                "  `update` datetime DEFAULT NULL COMMENT '更新时间',\n" +
-                "  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除',\n" +
-                "  PRIMARY KEY (`id`)\n" +
-                ") ENGINE=InnoDB AUTO_INCREMENT=1519 DEFAULT CHARSET=utf8;";
+        String sql = "CREATE TABLE `p_image`  (\n" +
+                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
+                "  `user_id` bigint(20) NOT NULL COMMENT '用户id',\n" +
+                "  `image_group_id` bigint(20) NOT NULL COMMENT '图片组id',\n" +
+                "  `image_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图片url',\n" +
+                "  `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',\n" +
+                "  `create` datetime(0) NOT NULL COMMENT '创建时间',\n" +
+                "  `update` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',\n" +
+                "  `type` int(2) NOT NULL COMMENT '图片类型，1：公开，2：私有',\n" +
+                "  PRIMARY KEY (`id`) USING BTREE\n" +
+                ") ";
+        String sql2 = "CREATE TABLE `p_image_group`  (\n" +
+                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
+                "  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '组名',\n" +
+                "  `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组描述',\n" +
+                "  `type` int(2) NOT NULL COMMENT '组类型，1：公开，2：私有',\n" +
+                "  `image_count` int(255) NOT NULL DEFAULT 0 COMMENT '组中图片数',\n" +
+                "  PRIMARY KEY (`id`) USING BTREE\n" +
+                ") ";
+//        new CreateMDMSCBySql().parse(sql2);
         new CreateMDMSCBySql().create(sql);
     }
 
@@ -45,8 +56,8 @@ public class CreateMDMSCBySql {
 //            this.tableName = tableName.replaceAll("`", "").substring(tableName.indexOf("_"));
             this.tableName = tableName;
             this.tableComment = tableComment;
-//            System.out.println(tableName + "\t\t" + tableComment);
-//            System.out.println("==========");
+            System.out.println(tableName + "\t\t" + tableComment);
+            System.out.println("==========");
             String columnsSQL = matcher.group("columnsSQL");
             if (columnsSQL != null && columnsSQL.length() > 0) {
                 Matcher colMatcher = COL_PATTERN.matcher(columnsSQL);
@@ -58,7 +69,7 @@ public class CreateMDMSCBySql {
                         this.fieldName.add(fieldName.replaceAll("`", ""));
                         this.fieldType.add(fieldType);
                         this.fieldComment.add(fieldComment);
-//                        System.out.println(fieldName + "\t\t" + fieldType + "\t\t" + fieldComment);
+                        System.out.println(fieldName + "\t\t" + fieldType + "\t\t" + fieldComment);
                     }
                 }
             }
@@ -70,13 +81,17 @@ public class CreateMDMSCBySql {
         String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller"};
         StringBuilder stringBuilder = new StringBuilder();
         String tableName = this.tableName.replaceAll("`", "").substring(this.tableName.indexOf("_"));
-        String className = tableName.substring(0, 1).toUpperCase() + tableName.substring(1);
+        String className = "";
         String url = "../jiangzi\\doc\\";
         String fromUrl = "../jiangzi\\src\\main\\java\\com\\najiujiangzi\\jiangzi\\";
         String dtoName = className + "DTO";
         String mapperName = className + "Mapper";
         String serviceName = className + "Service";
-
+        String[] s1 = tableName.split("_");
+        for (String s : s1) {
+            className = className + s.substring(0, 1).toUpperCase() + s.substring(1);
+        }
+        System.out.println(className);
         for (String s : MVC) {
             switch (s) {
                 case "model":
@@ -86,6 +101,7 @@ public class CreateMDMSCBySql {
                     }
                     for (int i = 0; i < fieldName.size(); i++) {
                         String javaType = FieldType.getByMysql(fieldType.get(i)).getFieldToJava();
+                        stringBuilder.append("\t/**\n").append("\t *").append(fieldComment.get(i)).append("\n").append("\t */\n");
                         stringBuilder.append("\tprivate ").append(javaType).append(" ").append(fieldName.get(i)).append(";\n");
                     }
                     String fields = stringBuilder.toString();
@@ -148,7 +164,7 @@ public class CreateMDMSCBySql {
                     FileUtils.write(new File(fromUrl + s + "\\" + serviceName + ".java"), newService);
                     break;
                 case "controller":
-                    String controllerName = "Admin" + className + "Controller";
+                    String controllerName = className + "Controller";
                     String controllerUrl = url + s + ".txt";
                     String controller = FileUtils.readFileToString(new File(controllerUrl));
                     String newController = controller.replaceAll("@dtoName", dtoName).replaceAll("@modelName", className)

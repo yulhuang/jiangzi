@@ -1,8 +1,8 @@
 package com.najiujiangzi.jiangzi.controller;
 
-import com.najiujiangzi.jiangzi.dto.@dtoName;
-import com.najiujiangzi.jiangzi.model.@modelName;
-import com.najiujiangzi.jiangzi.service.@serviceName;
+import com.najiujiangzi.jiangzi.dto.ImageDTO;
+import com.najiujiangzi.jiangzi.model.Image;
+import com.najiujiangzi.jiangzi.service.ImageService;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class @controllerName extends BaseController {
+public class ImageController extends BaseController {
 
     @Autowired
-    private @serviceName @toServiceName;
+    private ImageService imageService;
 
     @ResponseBody
     @RequestMapping("/list")
     public Map<String, Object> list(Map<String, Object> map, Page page) {
-        List<@modelName> @toModelNames = @toServiceName.find(new @dtoName(), page);
-        map.put("@toModelNames ", @toModelNames);
+        List<Image> images = imageService.find(new ImageDTO(), page);
+        map.put("images ", images);
         map.put("page", page);
         return map;
     }

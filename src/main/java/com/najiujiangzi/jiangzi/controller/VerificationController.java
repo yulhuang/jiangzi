@@ -1,8 +1,8 @@
 package com.najiujiangzi.jiangzi.controller;
 
-import com.najiujiangzi.jiangzi.dto.RoleDTO;
-import com.najiujiangzi.jiangzi.model.Role;
-import com.najiujiangzi.jiangzi.service.RoleService;
+import com.najiujiangzi.jiangzi.dto.VerificationDTO;
+import com.najiujiangzi.jiangzi.model.Verification;
+import com.najiujiangzi.jiangzi.service.VerificationService;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class AdminRoleController {
+public class VerificationController extends BaseController {
 
     @Autowired
-    private RoleService roleService;
+    private VerificationService verificationService;
 
     @ResponseBody
     @RequestMapping("/list")
     public Map<String, Object> list(Map<String, Object> map, Page page) {
-        List<Role> roles = roleService.find(new RoleDTO(), page);
-        map.put("roles ", roles);
+        List<Verification> verifications = verificationService.find(new VerificationDTO(), page);
+        map.put("verifications ", verifications);
         map.put("page", page);
         return map;
     }

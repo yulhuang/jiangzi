@@ -1,10 +1,7 @@
 package com.najiujiangzi.jiangzi;
 
-import com.najiujiangzi.jiangzi.dto.UserDTO;
-import com.najiujiangzi.jiangzi.mappers.UserMapper;
+import com.najiujiangzi.jiangzi.config.EmailConfig;
 import com.najiujiangzi.jiangzi.model.User;
-import com.najiujiangzi.jiangzi.service.UserService;
-import com.najiujiangzi.jiangzi.util.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +14,12 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JiangziApplicationTests {
     @Autowired
-    private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
+    private EmailConfig emailConfig;
 
     @Test
     public void contextLoads() {
-        List<User> byId = userMapper.findById(1L);
-        byId.forEach(System.out::println);
+//        emailConfig.sendSimpleMail("dengjiang0201@foxmail.com", "验证码测试", "888888");
+        emailConfig.sendSimpleMail("yul.huang@foxmail.com", "验证码测试", "888888");
     }
 
 }

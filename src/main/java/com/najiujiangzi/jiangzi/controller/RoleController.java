@@ -1,8 +1,8 @@
 package com.najiujiangzi.jiangzi.controller;
 
-import com.najiujiangzi.jiangzi.dto.@dtoName;
-import com.najiujiangzi.jiangzi.model.@modelName;
-import com.najiujiangzi.jiangzi.service.@serviceName;
+import com.najiujiangzi.jiangzi.dto.RoleDTO;
+import com.najiujiangzi.jiangzi.model.Role;
+import com.najiujiangzi.jiangzi.service.RoleService;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class @controllerName extends BaseController {
+public class RoleController {
 
     @Autowired
-    private @serviceName @toServiceName;
+    private RoleService roleService;
 
     @ResponseBody
     @RequestMapping("/list")
     public Map<String, Object> list(Map<String, Object> map, Page page) {
-        List<@modelName> @toModelNames = @toServiceName.find(new @dtoName(), page);
-        map.put("@toModelNames ", @toModelNames);
+        List<Role> roles = roleService.find(new RoleDTO(), page);
+        map.put("roles ", roles);
         map.put("page", page);
         return map;
     }

@@ -29,8 +29,8 @@ public interface UserMapper {
             "</script>")
     List<User> find(@Param("user") UserDTO dto, @Param("page") Page page);
 
-    @Insert("insert into sys_user(name, gender, email, phone)  values(#{name},#{gender},#{email},#{phone})")
-    Long insert(@Param("dto")UserDTO dto);
+    @Insert("insert into sys_user(name, gender, email, create, deleted)  values(#{name},#{gender},#{email},#{create},#{deleted})")
+    Long insert(@Param("model")User model);
 
     @Update("update user set name=#{name},pwd=#{pwd} where id=#{id}")
     Long update(UserDTO dto);
@@ -54,5 +54,8 @@ public interface UserMapper {
 
     @Select("SELECT u.*, r.* FROM sys_user u left join sys_user_role ur on u.id = ur.user_id left join sys_role r on ur.role_id = r.id where u.id = #{id}")
     List<User> findById(Long id);
+
+    @Select("SELECT * FROM sys_user where (name = #{name} or email = #{email}) AND deleted = 0")
+    List<User> registerByNameOrEmail(String name, String email);
 
 }

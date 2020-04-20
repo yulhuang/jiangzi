@@ -22,11 +22,19 @@ public class VerificationService {
         return this.find(new VerificationDTO(), null).get(0);
     }
 
-    public Long insert(VerificationDTO dto) {
+    public int insert(VerificationDTO dto) {
         return verificationMapper.insert(dto);
     }
 
-    public Long update(VerificationDTO dto) {
+    public int update(VerificationDTO dto) {
         return verificationMapper.update(dto);
+    }
+
+    public VerificationDTO findByCodeAndEmail(String code, String email) {
+        return verificationMapper.findByCodeAndEmail(code, email);
+    }
+
+    public int deleteById(Long id) {
+        return verificationMapper.deleteById(id);
     }
 }

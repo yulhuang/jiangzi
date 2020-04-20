@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     PrintWriter out = response.getWriter();
                     Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("code", 401);
+                    map.put("statusCode", 401);
                     if (ex instanceof UsernameNotFoundException) {
                         map.put("message", "用户名错误");
                     } else if (ex instanceof BadCredentialsException) {

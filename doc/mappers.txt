@@ -22,9 +22,9 @@ public interface @mapperName {
     List<@modelName> find(@Param("dto") @dtoName dto, @Param("page") Page page);
 
     @Insert("insert into @tableName(@insertField)  values(@dtoFields)")
-    Long insert(@Param("model")@modelName model);
+    int insert(@modelName model);
 
     @Update("update @tableName set @set where id=#{id}")
-    Long update(@dtoName dto);
+    int update(@dtoName dto);
 
 }

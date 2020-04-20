@@ -33,8 +33,7 @@ public class CreateMDMSCBySql {
                 "  `image_count` int(255) NOT NULL DEFAULT 0 COMMENT '组中图片数',\n" +
                 "  PRIMARY KEY (`id`) USING BTREE\n" +
                 ") ";
-//        new CreateMDMSCBySql().parse(sql2);
-        new CreateMDMSCBySql().create(sql);
+//        new CreateMDMSCBySql().create(sql);
     }
 
     //匹配整个ddl，将ddl分为表名，列sql部分，表注释
@@ -138,7 +137,7 @@ public class CreateMDMSCBySql {
                     for (String field : fieldName) {
                         stringBuilder.append("\t\t\t\" <if test=\\\\\"dto." + field + " != null\\\\\">AND " + field + " = #{dto." + field + "}</if>\" +\n");
                         if (!field.equals("id")) {
-                            insertField.append(field).append(",");
+                            insertField.append("`").append(field).append("`").append(",");
                             dtoFields.append("#{").append(field).append("},");
                             set.append(field).append("=").append("#{").append(field).append("},");
                         }

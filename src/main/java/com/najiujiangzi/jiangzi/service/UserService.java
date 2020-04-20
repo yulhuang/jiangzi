@@ -27,11 +27,11 @@ public class UserService {
         return userMapper.findOne(dto);
     }
 
-    public Long insert(UserDTO dto) {
+    public int insert(UserDTO dto) {
         return userMapper.insert(dto);
     }
 
-    public Long update(UserDTO dto) {
+    public int update(UserDTO dto) {
         return userMapper.update(dto);
     }
 
@@ -39,7 +39,7 @@ public class UserService {
         return userMapper.registerByNameOrEmail(name, email);
     }
 
-    public Long create(User user) {
+    public int create(User user) {
         return userMapper.insert(user);
     }
 
@@ -52,7 +52,11 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(encode);
         user.setDeleted(false);
-        Long aLong = create(user);
-        userRoleService.createCommonUser(aLong);
+        int i = create(user);
+        userRoleService.createCommonUser(user.getId());
+    }
+
+    public int updatePassword(UserDTO dto) {
+        return userMapper.updatePassword(dto);
     }
 }

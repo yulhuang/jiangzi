@@ -23,6 +23,6 @@ public interface UserRoleMapper {
             "</script>")
     List<UserRole> find(@Param("dto")UserRoleDTO dto, @Param("page")Page page);
 
-    @Insert("INSERT INTO sys_user_role(user_id, role_id) values(#{userId}, (select id from sys_role where name = 'COMMON'))")
-    Long insertCommonUser(Long userId);
+    @Insert("INSERT INTO sys_user_role(`user_id`, `role_id`) values(#{userId}, (select id from sys_role where name = 'COMMON'))")
+    int insertCommonUser(Long userId);
 }

@@ -3,9 +3,9 @@ package com.najiujiangzi.jiangzi.mappers;
 import com.najiujiangzi.jiangzi.dto.ImageGroupDTO;
 import com.najiujiangzi.jiangzi.model.ImageGroup;
 import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -26,10 +26,10 @@ public interface ImageGroupMapper {
             "</script>")
     List<ImageGroup> find(@Param("dto") ImageGroupDTO dto, @Param("page") Page page);
 
-    @Insert("insert into `p_image_group`(name,describe,type,image_count)  values(#{name},#{describe},#{type},#{image_count})")
-    Long insert(@Param("model") ImageGroup model);
+    @Insert("insert into `p_image_group`(`name`,`describe`,`type`,`image_count`)  values(#{name},#{describe},#{type},#{image_count})")
+    int insert(ImageGroup model);
 
     @Update("update `p_image_group` set name=#{name},describe=#{describe},type=#{type},image_count=#{image_count} where id=#{id}")
-    Long update(ImageGroupDTO dto);
+    int update(ImageGroupDTO dto);
 
 }

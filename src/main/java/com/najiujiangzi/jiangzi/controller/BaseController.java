@@ -8,7 +8,9 @@ public class BaseController {
     protected Map<String, Object> ok() {
         Map<String, Object> map = new HashMap<>();
         map.put("code", HttpServletResponse.SC_OK);
+        map.put("success", true);
         map.put("msg", "操作成功");
         return map;
     }
+
 }

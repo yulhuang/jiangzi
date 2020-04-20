@@ -9,10 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/imageGroup")
 public class ImageGroupController extends BaseController {
 
     @Autowired
@@ -20,7 +22,8 @@ public class ImageGroupController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/list")
-    public Map<String, Object> list(Map<String, Object> map, Page page) {
+    public Map<String, Object> list(Page page) {
+        Map<String, Object> map = new HashMap<>();
         List<ImageGroup> image_groups = image_groupService.find(new ImageGroupDTO(), page);
         map.put("image_groups ", image_groups);
         map.put("page", page);

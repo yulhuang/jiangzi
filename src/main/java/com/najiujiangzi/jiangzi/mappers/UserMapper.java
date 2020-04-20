@@ -4,6 +4,7 @@ import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -29,11 +30,12 @@ public interface UserMapper {
             "</script>")
     List<User> find(@Param("user") UserDTO dto, @Param("page") Page page);
 
-    @Insert("insert into sys_user(name, gender, email, create, deleted)  values(#{name},#{gender},#{email},#{create},#{deleted})")
-    Long insert(@Param("model")User model);
+    @Insert("insert into sys_user(`name`, `gender`, `email`, `create`, `deleted`, `password`)  values(#{name},#{gender},#{email},#{create},#{deleted},#{password})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insert(User model);
 
-    @Update("update user set name=#{name},pwd=#{pwd} where id=#{id}")
-    Long update(UserDTO dto);
+    @Update("update user set name=#{name} where id=#{id}")
+    int update(UserDTO dto);
 
     @Select("<script>" +
             " SELECT * FROM sys_user" +
@@ -58,4 +60,6 @@ public interface UserMapper {
     @Select("SELECT * FROM sys_user where (name = #{name} or email = #{email}) AND deleted = 0")
     List<User> registerByNameOrEmail(String name, String email);
 
+    @Update("update sys_user set password=#{password} where id=#{id}")
+    int updatePassword(UserDTO dto);
 }

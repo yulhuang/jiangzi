@@ -2,6 +2,7 @@ package com.najiujiangzi.jiangzi.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
+import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyUserDetailService implements UserDetailsService {
     protected final static Logger logger = LoggerFactory.getLogger(MyUserDetailService.class);
-    private static int todayLoginCount = 0;
 
     @Autowired
     private UserService userService;
@@ -35,7 +35,7 @@ public class MyUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("用户不存在");
         }
         user.setRoles(roleService.findByUserId(user.getId()));
-        logger.info("今日登录人数" + ++todayLoginCount);
+        logger.info("今日登录人数" + NumberOfUser.addTodayLoginCount());
         return user;
     }
 

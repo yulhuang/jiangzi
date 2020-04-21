@@ -8,6 +8,7 @@ import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.service.VerificationService;
+import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ import java.util.Map;
 @RequestMapping("/login")
 public class LoginController extends BaseController {
     protected final static Logger logger = LoggerFactory.getLogger(LoginController.class);
-    private static int todayCreateUser = 0;
 
     @Value("${isServer}")
     protected Boolean isServer;
@@ -162,7 +162,8 @@ public class LoginController extends BaseController {
         }
         userService.createUser(name, email, gender, password);
         verificationService.deleteById(byCodeAndCreate.getId());
-        logger.info("今天新增用户" + ++todayCreateUser);
+
+        logger.info("今天新增用户" + NumberOfUser.addTodayCreateUser());
         return ok();
     }
 

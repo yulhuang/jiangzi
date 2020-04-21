@@ -33,11 +33,33 @@ public class Image {
 	 */
 	private LocalDateTime update;
 	/**
-	 *图片类型，1：公开，2：私有
+	 *图片类型，1：小图，2：中图，3：大图
 	 */
 	private Integer type;
+	/**
+	 * 点赞总数
+	 */
+	private Integer numberThumbs;
+	/**
+	 * 收藏总数
+	 */
+	private Integer numberEnshrine;
 
+	public Integer getNumberThumbs() {
+		return numberThumbs;
+	}
 
+	public void setNumberThumbs(Integer numberThumbs) {
+		this.numberThumbs = numberThumbs;
+	}
+
+	public Integer getNumberEnshrine() {
+		return numberEnshrine;
+	}
+
+	public void setNumberEnshrine(Integer numberEnshrine) {
+		this.numberEnshrine = numberEnshrine;
+	}
 
 	public void setId(Long id) {
 		this.id = id;

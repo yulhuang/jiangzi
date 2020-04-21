@@ -14,14 +14,15 @@ import java.util.regex.Pattern;
  */
 public class CreateMDMSCBySql {
     public static void main(String[] args) throws Exception {
-        String sql = "CREATE TABLE `sys_persistent_logins`  (\n" +
-                "  `username` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
-                "  `series` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
-                "  `token` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
-                "  `last_used` datetime(0) NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP(0),\n" +
-                "  PRIMARY KEY (`series`) USING BTREE\n" +
-                ")  ";
-//        new CreateMDMSCBySql().create(sql);
+        String sql = "CREATE TABLE `p_thumbs_image`  (\n" +
+                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
+                "  `user_id` bigint(20) NOT NULL COMMENT '用户id',\n" +
+                "  `image_id` bigint(20) NOT NULL COMMENT '图片id',\n" +
+                "  `create` datetime(0) NOT NULL COMMENT '点赞时间',\n" +
+                "  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否取消点赞',\n" +
+                "  PRIMARY KEY (`id`) USING BTREE\n" +
+                ")   ";
+        new CreateMDMSCBySql().create(sql);
     }
 
     //匹配整个ddl，将ddl分为表名，列sql部分，表注释
@@ -79,6 +80,19 @@ public class CreateMDMSCBySql {
         String dtoName = className + "DTO";
         String mapperName = className + "Mapper";
         String serviceName = className + "Service";
+        List<String> fieldName = new ArrayList<>();
+        for (String field : this.fieldName) {
+            String[] s2 = field.split("_");
+            String name = "";
+            for (int i = 0; i < s2.length; i++) {
+                if (i > 0) {
+                    name = name + s2[i].substring(0, 1).toUpperCase() + s2[i].substring(1);
+                } else {
+                    name = s2[i];
+                }
+            }
+            fieldName.add(name);
+        }
         for (String s : MVC) {
             switch (s) {
                 case "model":
@@ -122,14 +136,15 @@ public class CreateMDMSCBySql {
                     StringBuilder insertField = new StringBuilder();
                     StringBuilder dtoFields = new StringBuilder();
                     StringBuilder set = new StringBuilder();
-                    for (String field : fieldName) {
-                        stringBuilder.append("\t\t\t\" <if test=\\\\\"dto." + field + " != null\\\\\">AND " + field + " = #{dto." + field + "}</if>\" +\n");
-                        if (!field.equals("id")) {
-                            insertField.append("`").append(field).append("`").append(",");
-                            dtoFields.append("#{").append(field).append("},");
-                            set.append(field).append("=").append("#{").append(field).append("},");
+                    for (int i = 0; i < fieldName.size(); i++) {
+                        stringBuilder.append("\t\t\t\" <if test=\\\\\"dto." + fieldName.get(i) + " != null\\\\\">AND " + this.fieldName.get(i) + " = #{dto." + fieldName.get(i) + "}</if>\" +\n");
+                        if (!fieldName.get(i).equals("id")) {
+                            insertField.append("`").append(this.fieldName.get(i)).append("`").append(",");
+                            dtoFields.append("#{").append(fieldName.get(i)).append("},");
+                            set.append(this.fieldName.get(i)).append("=").append("#{").append(fieldName.get(i)).append("},");
                         }
                     }
+
                     ifs = stringBuilder.toString();
                     stringBuilder.delete(0, stringBuilder.length());
 

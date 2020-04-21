@@ -24,6 +24,8 @@ public interface ImageMapper {
 			" <if test=\"dto.create != null\">AND create = #{dto.create}</if>" +
 			" <if test=\"dto.update != null\">AND update = #{dto.update}</if>" +
 			" <if test=\"dto.type != null\">AND type = #{dto.type}</if>" +
+			" <if test=\"dto.numberThumbs != null\">AND number_thumbs = #{dto.numberThumbs}</if>" +
+			" <if test=\"dto.numberEnshrine != null\">AND number_enshrine = #{dto.numberEnshrine}</if>" +
             " <if test=\"page != null\">LIMIT #{page.startPage}, #{page.pageSize}</if>" +
             " </where>" +
             "</script>")

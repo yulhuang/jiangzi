@@ -17,6 +17,7 @@ public interface ImageGroupMapper {
             " <where>" +
             " 1 = 1" +
 			" <if test=\"dto.id != null\">AND id = #{dto.id}</if>" +
+			" <if test=\"dto.userId != null\">AND user_id = #{dto.v}</if>" +
 			" <if test=\"dto.name != null\">AND name = #{dto.name}</if>" +
 			" <if test=\"dto.describe != null\">AND describe = #{dto.describe}</if>" +
 			" <if test=\"dto.type != null\">AND type = #{dto.type}</if>" +

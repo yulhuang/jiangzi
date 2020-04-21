@@ -7,6 +7,10 @@ public class ImageGroup {
 	 */
 	private Long id;
 	/**
+	 * 用户id
+	 */
+	private Long userId;
+	/**
 	 *组名
 	 */
 	private String name;
@@ -23,7 +27,13 @@ public class ImageGroup {
 	 */
 	private Integer image_count;
 
+	public Long getUserId() {
+		return userId;
+	}
 
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 	public void setId(Long id) {
 		this.id = id;

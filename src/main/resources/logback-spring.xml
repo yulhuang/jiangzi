@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scanPeriod="2 seconds" debug="false">
+    <!--日志路径-->
+    <property name="LOG_HOME" value="/data/log/jiangzi"/>
+
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,%i索引【从数字0开始递增】,,, -->
+    <!-- appender是configuration的子节点，是负责写日志的组件。 -->
+    <!-- ConsoleAppender：把日志输出到控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--<encoder>-->
+        <!--<pattern>%d %p (%file:%line\)- %m%n</pattern>-->
+        <!-- 控制台也要使用UTF-8，不要使用GBK，否则会中文乱码 -->
+        <!--<charset>UTF-8</charset>-->
+        <!--</encoder>-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}\(%line\) - %msg%n</pattern>-->
+            <pattern>%d [%thread] %p (%file:%line\)- %m%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- RollingFileAppender：滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- rollingPolicy:当发生滚动时，决定 RollingFileAppender 的行为，涉及文件移动和重命名。 -->
+        <!-- SizeAndTimeBasedRollingPolicy：对于maxFileSize和极大值的小值，Logback只在达到极大值限制时删除旧的存档文件。但是，对于总量SizeCap(~5GB)的大值，它会删除所有存档的文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件保存路径-->
+            <FileNamePattern>${LOG_HOME}/jiangzi.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <!-- maxFileSize:这是活动文件的大小，默认值是10MB,本篇设置为1MB -->
+            <MaxFileSize>1MB</MaxFileSize>
+            <!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
+            <MaxHistory>30</MaxHistory>
+            <!--极大值限制-->
+            <TotalSizeCap>5GB</TotalSizeCap>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- pattern节点，用来设置日志的输入格式 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}\(%line\) - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="ADMIN_ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/admin_access.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <MaxFileSize>1MB</MaxFileSize>
+            <MaxHistory>30</MaxHistory>
+            <TotalSizeCap>5GB</TotalSizeCap>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!-- 控制台输出日志级别 -->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <!-- 指定项目中某个包，当有日志操作行为时的日志记录级别 -->
+    <!-- com.najiujiangzi为根包，也就是只要是发生在这个根包下面的所有日志操作行为的权限都是DEBUG -->
+    <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
+    <logger name="com.najiujiangzi" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.najiujiangzi.jiangzi.controller" level="DEBUG" additivity="false">
+        <appender-ref ref="ADMIN_ACCESS"/>
+    </logger>
+
+	<logger name="com.najiujiangzi.jiangzi.service" level="DEBUG" additivity="false">
+		<appender-ref ref="ADMIN_ACCESS"/>
+	</logger>
+
+</configuration>

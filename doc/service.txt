@@ -1,0 +1,32 @@
+package com.najiujiangzi.jiangzi.service;
+
+import com.najiujiangzi.jiangzi.dto.@dtoName;
+import com.najiujiangzi.jiangzi.mappers.@mapperName;
+import com.najiujiangzi.jiangzi.model.@modelName;
+import com.najiujiangzi.jiangzi.util.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class @serviceName {
+    @Autowired
+    private @mapperName @toMapperName;
+
+    public List<@modelName> find(@dtoName dto, Page page) {
+        return @toMapperName.find(dto, page);
+    }
+
+    public @modelName findOne() {
+        return this.find(new @dtoName(), null).get(0);
+    }
+
+    public int insert(@dtoName dto) {
+        return @toMapperName.insert(dto);
+    }
+
+    public int update(@dtoName dto) {
+        return @toMapperName.update(dto);
+    }
+}

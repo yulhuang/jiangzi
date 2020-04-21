@@ -1,0 +1,8 @@
+package com.najiujiangzi.jiangzi.model;
+
+@import
+public class @className {
+@fields
+
+@setAndGet
+}

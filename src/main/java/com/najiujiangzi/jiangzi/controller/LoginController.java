@@ -12,6 +12,7 @@ import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +32,9 @@ import java.util.Map;
 public class LoginController extends BaseController {
     protected final static Logger logger = LoggerFactory.getLogger(LoginController.class);
     private static int todayCreateUser = 0;
+
+    @Value("${isServer}")
+    protected Boolean isServer;
 
     @Autowired
     private UserService userService;
@@ -115,15 +119,19 @@ public class LoginController extends BaseController {
                 }
             }
         }
-        String code = "888888";
-//        String code = (int) ((Math.random() * 9 + 1) * 100000) + "";
+        String code;
+        if (isServer) {
+            code = (int) ((Math.random() * 9 + 1) * 100000) + "";
+        } else {
+            code = "888888";
+        }
         VerificationDTO dto = new VerificationDTO();
         dto.setCode(code);
         dto.setCreate(LocalDateTime.now());
         dto.setEmail(email);
         verificationService.insert(dto);
         //邮件发送验证码
-        emailService.sendSimpleMail(email, "用户注册验证码", code);
+        emailService.sendVerification(email, "验证码", code);
         return ok();
     }
 

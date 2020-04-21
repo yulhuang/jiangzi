@@ -45,4 +45,11 @@ public class UserController extends BaseController {
         return ok();
     }
 
+    @RequestMapping("/test")
+    public Map<String, Object> test() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("ok","ok");
+        return map;
+    }
+
 }

@@ -21,7 +21,7 @@ public class JiangziApplication {
 
         String configFile = "/data/config/jiangzi/application.properties";
         if (new File(configFile).exists()) {
-//             System.setProperty("spring.config.location", configFile);
+             System.setProperty("spring.config.location", configFile);
         }
         SpringApplication.run(JiangziApplication.class, args);
         long end = System.currentTimeMillis();

@@ -18,8 +18,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ObjectMapper objectMapper;
     @Autowired
     private MyUserDetailService myUserDetailService;
-//    @Autowired
-//    private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -96,10 +99,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().logoutSuccessUrl("/login/out")
                 //关闭跨站请求伪造，不然/logout会404
                 .and().csrf().disable();
-//                .rememberMe()
-//                .tokenRepository(persistentTokenRepository())
+
+        //自动登录功能
+        http.rememberMe().tokenRepository(persistentTokenRepository()).userDetailsService(myUserDetailService)
         // 有效时间：单位s
-//                .tokenValiditySeconds(60)
+                .tokenValiditySeconds(86400);
         //指定前台传递的是否rememberme的参数名,前台要传递的参数值是true或false
 //        http.rememberMe().rememberMeParameter("rememberMe").rememberMeServices(persistentTokenRepository());
     }
@@ -115,13 +119,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return authenticationProvider;
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository(){
-//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-//        tokenRepository.setDataSource(dataSource);
-//        // 如果token表不存在，使用下面语句可以初始化该表；若存在，请注释掉这条语句，否则会报错。
-////        tokenRepository.setCreateTableOnStartup(true);
-//        return tokenRepository;
-//    }
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        //配置数据源
+        tokenRepository.setDataSource(dataSource);
+        // 如果token表不存在，使用下面语句可以初始化该表；若存在，请注释掉这条语句，否则会报错。
+//        tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
+    }
 
 }

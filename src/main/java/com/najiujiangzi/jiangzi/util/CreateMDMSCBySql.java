@@ -14,25 +14,13 @@ import java.util.regex.Pattern;
  */
 public class CreateMDMSCBySql {
     public static void main(String[] args) throws Exception {
-        String sql = "CREATE TABLE `p_image`  (\n" +
-                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
-                "  `user_id` bigint(20) NOT NULL COMMENT '用户id',\n" +
-                "  `image_group_id` bigint(20) NOT NULL COMMENT '图片组id',\n" +
-                "  `image_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图片url',\n" +
-                "  `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',\n" +
-                "  `create` datetime(0) NOT NULL COMMENT '创建时间',\n" +
-                "  `update` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',\n" +
-                "  `type` int(2) NOT NULL COMMENT '图片类型，1：公开，2：私有',\n" +
-                "  PRIMARY KEY (`id`) USING BTREE\n" +
-                ") ";
-        String sql2 = "CREATE TABLE `p_image_group`  (\n" +
-                "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
-                "  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '组名',\n" +
-                "  `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组描述',\n" +
-                "  `type` int(2) NOT NULL COMMENT '组类型，1：公开，2：私有',\n" +
-                "  `image_count` int(255) NOT NULL DEFAULT 0 COMMENT '组中图片数',\n" +
-                "  PRIMARY KEY (`id`) USING BTREE\n" +
-                ") ";
+        String sql = "CREATE TABLE `sys_persistent_logins`  (\n" +
+                "  `username` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
+                "  `series` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
+                "  `token` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,\n" +
+                "  `last_used` datetime(0) NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP(0),\n" +
+                "  PRIMARY KEY (`series`) USING BTREE\n" +
+                ")  ";
 //        new CreateMDMSCBySql().create(sql);
     }
 
@@ -83,14 +71,14 @@ public class CreateMDMSCBySql {
         String className = "";
         String url = "../jiangzi\\doc\\";
         String fromUrl = "../jiangzi\\src\\main\\java\\com\\najiujiangzi\\jiangzi\\";
-        String dtoName = className + "DTO";
-        String mapperName = className + "Mapper";
-        String serviceName = className + "Service";
         String[] s1 = tableName.split("_");
         for (String s : s1) {
             className = className + s.substring(0, 1).toUpperCase() + s.substring(1);
         }
         System.out.println(className);
+        String dtoName = className + "DTO";
+        String mapperName = className + "Mapper";
+        String serviceName = className + "Service";
         for (String s : MVC) {
             switch (s) {
                 case "model":

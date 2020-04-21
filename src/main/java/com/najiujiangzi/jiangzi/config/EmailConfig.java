@@ -4,12 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Component
 public class EmailConfig {
     @Autowired
     private JavaMailSender javaMailSender;
+
     @Value("${spring.mail.username}")
     private String from;
 
@@ -25,6 +30,25 @@ public class EmailConfig {
         message.setSubject(subject);
         message.setText(contnet);
         message.setFrom(from);
+        javaMailSender.send(message);
+    }
+
+
+    /**
+     * HTML 文本邮件
+     *
+     * @param to      接收者邮件
+     * @param subject 邮件主题
+     * @param contnet HTML内容
+     * @throws MessagingException
+     */
+    public void sendHtmlMail(String to, String subject, String contnet) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(contnet, true);
+        helper.setFrom(from);
         javaMailSender.send(message);
     }
 }

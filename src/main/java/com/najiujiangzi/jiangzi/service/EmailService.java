@@ -28,7 +28,7 @@ public class EmailService {
     }
 
     /**
-     * 发送邮件验证码
+     * 发送http邮件验证码
      *
      * @param to
      * @param subject

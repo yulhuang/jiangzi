@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi;
 
+import com.najiujiangzi.jiangzi.rocketMQ.Consumer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class JiangziApplication {
              System.setProperty("spring.config.location", configFile);
         }
         SpringApplication.run(JiangziApplication.class, args);
+
         long end = System.currentTimeMillis();
         logger.info("耗时-" + (start - end) + "-毫秒");
     }

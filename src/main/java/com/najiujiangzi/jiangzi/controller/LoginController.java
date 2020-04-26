@@ -5,6 +5,7 @@ import com.najiujiangzi.jiangzi.dto.VerificationDTO;
 import com.najiujiangzi.jiangzi.enums.GenderType;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
+import com.najiujiangzi.jiangzi.rocketMQ.Producer;
 import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.service.VerificationService;
@@ -131,7 +132,12 @@ public class LoginController extends BaseController {
         dto.setEmail(email);
         verificationService.insert(dto);
         //邮件发送验证码
-        emailService.sendVerification(email, "验证码", code);
+        try {
+            new Producer().emailAsyncProducer(email, code);
+            //emailService.sendVerification(email, "验证码", code);
+        } catch (Exception e) {
+            throw new RuntimeException("验证码发送失败！");
+        }
         return ok();
     }
 
@@ -167,4 +173,14 @@ public class LoginController extends BaseController {
         return ok();
     }
 
+    @ResponseBody
+    @RequestMapping("/testEmail")
+    public String testEmail() {
+        try {
+            new Producer().emailAsyncProducer("297304818@qq.com", "888888");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "email_ok";
+    }
 }

@@ -1,5 +1,7 @@
 package com.najiujiangzi.jiangzi.controller;
 
+import com.najiujiangzi.jiangzi.rocketMQ.Consumer;
+import com.najiujiangzi.jiangzi.rocketMQ.Producer;
 import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.service.VerificationService;
@@ -11,11 +13,15 @@ import java.util.Map;
 
 public class BaseController {
     @Autowired
-    private UserService userService;
+    protected UserService userService;
     @Autowired
-    private EmailService emailService;
+    protected EmailService emailService;
     @Autowired
-    private VerificationService verificationService;
+    protected VerificationService verificationService;
+    @Autowired
+    protected Producer producer;
+    @Autowired
+    protected Consumer consumer;
 
     protected Map<String, Object> ok() {
         Map<String, Object> map = new HashMap<>();

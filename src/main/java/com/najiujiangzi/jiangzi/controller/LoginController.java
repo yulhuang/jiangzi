@@ -5,14 +5,12 @@ import com.najiujiangzi.jiangzi.dto.VerificationDTO;
 import com.najiujiangzi.jiangzi.enums.GenderType;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
-import com.najiujiangzi.jiangzi.rocketMQ.Producer;
 import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.service.VerificationService;
 import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import com.najiujiangzi.jiangzi.util.ValidationUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,10 +27,10 @@ import java.util.Map;
 
 
 //@RestController
+@Slf4j
 @Controller
 @RequestMapping("/login")
 public class LoginController extends BaseController {
-    protected final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Value("${isServer}")
     protected Boolean isServer;
@@ -43,6 +41,7 @@ public class LoginController extends BaseController {
     private EmailService emailService;
     @Autowired
     private VerificationService verificationService;
+
 
 
     @RequestMapping("/toLogin")
@@ -133,7 +132,7 @@ public class LoginController extends BaseController {
         verificationService.insert(dto);
         //邮件发送验证码
         try {
-            new Producer().emailAsyncProducer(email, code);
+            producer.emailAsyncProducer(email, code);
             //emailService.sendVerification(email, "验证码", code);
         } catch (Exception e) {
             throw new RuntimeException("验证码发送失败！");
@@ -169,7 +168,7 @@ public class LoginController extends BaseController {
         userService.createUser(name, email, gender, password);
         verificationService.deleteById(byCodeAndCreate.getId());
 
-        logger.info("今天新增用户" + NumberOfUser.addTodayCreateUser());
+        log.info("今天新增用户" + NumberOfUser.addTodayCreateUser());
         return ok();
     }
 
@@ -177,7 +176,7 @@ public class LoginController extends BaseController {
     @RequestMapping("/testEmail")
     public String testEmail() {
         try {
-            new Producer().emailAsyncProducer("297304818@qq.com", "888888");
+            producer.emailAsyncProducer("297304818@qq.com", "888888");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,8 +5,8 @@ import com.najiujiangzi.jiangzi.model.@modelName;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.annotations.Options;
 
 import java.util.List;
@@ -22,11 +22,12 @@ public interface @mapperName {
             "</script>")
     List<@modelName> find(@Param("dto") @dtoName dto, @Param("page") Page page);
 
-    @Insert("insert into @tableName(@insertField)  values(@dtoFields)")
+    //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串作,为sql的语句
+    @InsertProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(@modelName model);
 
-    @Update("update @tableName set @set where id=#{id}")
-    int update(@dtoName dto);
+     @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "updateSql")
+     int update(@modelName model);
 
 }

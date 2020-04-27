@@ -3,11 +3,12 @@ package com.najiujiangzi.jiangzi.mappers;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.Page;
-import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
 
@@ -31,12 +32,20 @@ public interface UserMapper {
             "</script>")
     List<User> find(@Param("user") UserDTO dto, @Param("page") Page page);
 
-    @Insert("insert into sys_user(`name`, `account`, `gender`, `email`, `create`, `deleted`, `password`)  values(#{name},#{account},#{gender},#{email},#{create},#{deleted},#{password})")
+//    @Insert("insert into sys_user(`name`, `account`, `gender`, `email`, `create`, `deleted`, `password`)  values(#{name},#{account},#{gender},#{email},#{create},#{deleted},#{password})")
+//    @Options(useGeneratedKeys = true, keyProperty = "id")
+//    int insert(User model);
+
+    //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串  作为sql的语句
+    @InsertProvider(type = com.najiujiangzi.jiangzi.sqlClass.UserSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(User model);
 
-    @Update("update user set name=#{name} where id=#{id}")
-    int update(UserDTO dto);
+//    @Update("update user set name=#{name} where id=#{id}")
+//    int update(UserDTO dto);
+
+    @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.UserSql.class, method = "updateSql")
+    int update(User model);
 
     @Select("<script>" +
             " SELECT * FROM sys_user" +
@@ -49,7 +58,6 @@ public interface UserMapper {
             " <if test=\"email != null\">AND email = #{email}</if>" +
             " <if test=\"phone != null\">AND phone = #{phone}</if>" +
             " <if test=\"likeFind != null\">AND name LIKE concat('%',#{likeFind},'%')</if>" +
-            " <if test=\"token != null\">AND token = #{token}</if>" +
             " <if test=\"deleted != null\">AND deleted = #{deleted}</if>" +
             " LIMIT 1" +
             "</where>" +

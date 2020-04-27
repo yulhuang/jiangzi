@@ -51,6 +51,7 @@ public class UserService {
         try {
             String encode = WebSecurityConfig.getEncoder().encode(password);
             User user = new User();
+            user.setPhone("15274800577");
             user.setName(name);
             user.setCreate(LocalDateTime.now());
             user.setGender(GenderType.getByCode(gender).getValue());

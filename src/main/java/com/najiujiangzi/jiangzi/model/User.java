@@ -14,7 +14,6 @@ public class User {
     private LocalDateTime create;
     private LocalDateTime update;
     private Boolean deleted;
-    private String token;
 
     @Override
     public String toString() {
@@ -30,7 +29,6 @@ public class User {
                 ", create=" + create +
                 ", update=" + update +
                 ", deleted=" + deleted +
-                ", token='" + token + '\'' +
                 '}';
     }
 
@@ -40,14 +38,6 @@ public class User {
 
     public void setAccount(String account) {
         this.account = account;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public void setPassword(String password) {

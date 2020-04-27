@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class CreateMDMSCBySql {
     public static void main(String[] args) throws Exception {
-        String sql = "CREATE TABLE `p_thumbs_image`  (\n" +
+        String sql = "CREATE TABLE `p_test`  (\n" +
                 "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',\n" +
                 "  `user_id` bigint(20) NOT NULL COMMENT '用户id',\n" +
                 "  `image_id` bigint(20) NOT NULL COMMENT '图片id',\n" +
@@ -22,7 +22,7 @@ public class CreateMDMSCBySql {
                 "  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否取消点赞',\n" +
                 "  PRIMARY KEY (`id`) USING BTREE\n" +
                 ")   ";
-        new CreateMDMSCBySql().create(sql);
+//        new CreateMDMSCBySql().create(sql);
     }
 
     //匹配整个ddl，将ddl分为表名，列sql部分，表注释
@@ -66,7 +66,8 @@ public class CreateMDMSCBySql {
 
     private void create(String sql) throws Exception {
         parse(sql);
-        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller"};
+//        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "sqlClass"};
+        String[] MVC = new String[]{"mappers", "sqlClass"};
         StringBuilder stringBuilder = new StringBuilder();
         String tableName = this.tableName.replaceAll("`", "").substring(this.tableName.indexOf("_"));
         String className = "";
@@ -133,14 +134,14 @@ public class CreateMDMSCBySql {
                     break;
                 case "mappers":
                     String ifs;
-                    StringBuilder insertField = new StringBuilder();
-                    StringBuilder dtoFields = new StringBuilder();
+                    //StringBuilder insertField = new StringBuilder();
+                    //StringBuilder dtoFields = new StringBuilder();
                     StringBuilder set = new StringBuilder();
                     for (int i = 0; i < fieldName.size(); i++) {
                         stringBuilder.append("\t\t\t\" <if test=\\\\\"dto." + fieldName.get(i) + " != null\\\\\">AND " + this.fieldName.get(i) + " = #{dto." + fieldName.get(i) + "}</if>\" +\n");
                         if (!fieldName.get(i).equals("id")) {
-                            insertField.append("`").append(this.fieldName.get(i)).append("`").append(",");
-                            dtoFields.append("#{").append(fieldName.get(i)).append("},");
+                            /*insertField.append("`").append(this.fieldName.get(i)).append("`").append(",");
+                            dtoFields.append("#{").append(fieldName.get(i)).append("},");*/
                             set.append(this.fieldName.get(i)).append("=").append("#{").append(fieldName.get(i)).append("},");
                         }
                     }
@@ -152,8 +153,8 @@ public class CreateMDMSCBySql {
                     String mapper = FileUtils.readFileToString(new File(mapperlUrl));
                     String newMapper = mapper.replaceAll("@dtoName", dtoName).replaceAll("@modelName", className).replaceAll("@mapperName", mapperName)
                             .replaceAll("@tableName", this.tableName).replaceAll("@if", ifs)
-                            .replaceAll("@insertField", insertField.delete(insertField.length() - 1, insertField.length()).toString())
-                            .replaceAll("@dtoFields", dtoFields.delete(dtoFields.length() - 1, dtoFields.length()).toString())
+                            //.replaceAll("@insertField", insertField.delete(insertField.length() - 1, insertField.length()).toString())
+                            //.replaceAll("@dtoFields", dtoFields.delete(dtoFields.length() - 1, dtoFields.length()).toString())
                             .replaceAll("@set", set.delete(set.length() - 1, set.length()).toString());
                     FileUtils.write(new File(fromUrl + s + "\\" + mapperName + ".java"), newMapper);
                     break;
@@ -174,6 +175,35 @@ public class CreateMDMSCBySql {
                             .replaceAll("@controllerName", controllerName).replaceAll("@serviceName", serviceName)
                             .replaceAll("@toServiceName", serviceName.substring(0, 1).toLowerCase() + serviceName.substring(1));
                     FileUtils.write(new File(fromUrl + s + "//" + controllerName + ".java"), newController);
+                    break;
+                case "sqlClass":
+                    StringBuilder saveValues = new StringBuilder();
+                    StringBuilder updateValue = new StringBuilder();
+                    //if (model.getName() != null) {
+                    //                        SET("`name` = #{name}");
+                    //                    }
+                    for (int i = 0; i < fieldName.size(); i++) {
+                        String methodName = fieldName.get(i).substring(0, 1).toUpperCase() + fieldName.get(i).substring(1);
+                        saveValues.append("\t\t\t\tif (model.get" + methodName + "() != null) {\n")
+                                .append("\t\t\t\t\tVALUES(\"`" + this.fieldName.get(i) + "`\", \"#{" + fieldName.get(i) + "}\");\n")
+                                .append("\t\t\t\t}\n");
+                        updateValue.append("\t\t\t\tif (model.get" + methodName + "() != null) {\n")
+                                .append("\t\t\t\t\tSET(\"`" + this.fieldName.get(i) + "` = #{" + fieldName.get(i) + "}\");\n")
+                                .append("\t\t\t\t}\n");
+                    }
+                    /*for (String field : fieldName) {
+                        String methodName = field.substring(0, 1).toUpperCase() + field.substring(1);
+                        saveValues.append("\t\t\t\tif (model.get" + methodName + "() != null) {\n")
+                                .append("\t\t\t\t\tVALUES(\"`" + field + "`\", \"#{" + field + "}\");\n")
+                                .append("\t\t\t\t\t}\n");
+                    }*/
+                    String sqlName = className + "Sql";
+                    String sqlUrl = url + s + ".txt";
+                    String sqlClass = FileUtils.readFileToString(new File(sqlUrl));
+                    String newSqlClass = sqlClass.replaceAll("@tableName", this.tableName).replaceAll("@modelName", className)
+                            .replaceAll("@saveValues", String.valueOf(saveValues))
+                            .replaceAll("@updateValue", String.valueOf(updateValue));
+                    FileUtils.write(new File(fromUrl + s + "//" + sqlName + ".java"), newSqlClass);
                     break;
             }
         }

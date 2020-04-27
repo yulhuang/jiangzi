@@ -1,0 +1,32 @@
+package com.najiujiangzi.jiangzi.sqlClass;
+
+import com.najiujiangzi.jiangzi.model.User;
+import org.apache.ibatis.jdbc.SQL;
+
+/**
+ * 动态sql类
+ */
+public class @modelNameSql {
+    //方法中的关键字是区分大小写的  SQL SELECT WHERE
+    public String save(@modelName model) {
+        return new SQL() {
+            {
+                INSERT_INTO("@tableName");
+@saveValues
+            }
+        }.toString();
+    }
+
+    public String updateSql(@modelName model) {
+        if (model.getId() == null) {
+            throw new RuntimeException("id不能为空");
+        }
+        return new SQL() {
+            {
+                UPDATE("sys_user");
+@updateValue
+                WHERE("`id` = #{id}");
+            }
+        }.toString();
+    }
+}

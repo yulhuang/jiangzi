@@ -118,7 +118,6 @@ public class LoginController extends BaseController {
             //邮件发送验证码
             try {
                 producer.emailAsyncProducer(email, code);
-                //emailService.sendVerification(email, "验证码", code);
             } catch (Exception e) {
                 throw new RuntimeException("验证码发送失败！");
             }
@@ -165,7 +164,6 @@ public class LoginController extends BaseController {
                 return map;
             }
         }
-
         userService.createUser(name, email, gender, password);
         redisUtil.del("emailCode_" + email);
         //日志统计今日新增用户

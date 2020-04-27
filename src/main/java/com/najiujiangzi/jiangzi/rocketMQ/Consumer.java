@@ -20,6 +20,9 @@ public class Consumer {
     @Value("${rocketMQnameServer}")
     private String nameServerUrl;
 
+    @Value("${isServer}")
+    private boolean isserver;
+
     @Autowired
     private EmailService emailService;
 
@@ -42,7 +45,9 @@ public class Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
-        consumer.start();
+        if (isserver) {
+            consumer.start();
+        }
     }
 
     private DefaultMQPushConsumer createConsumer(String group) {

@@ -7,6 +7,7 @@ import com.najiujiangzi.jiangzi.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +23,8 @@ public class MyUserDetailService implements UserDetailsService {
     private RoleService roleService;
     @Autowired
     private RedisUtil redisUtil;
+    @Value("${isServer}")
+    private boolean isServer;
 
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
@@ -36,9 +39,11 @@ public class MyUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("用户不存在");
         }
         user.setRoles(roleService.findByUserId(user.getId()));
-        //日志统计今日登录人数
-        redisUtil.incrby(NumberOfUser.getLoginUserKey(), 1L);
-        logger.info("登录账号-->" + account + "; 今日总登录数-->" + redisUtil.get(NumberOfUser.getLoginUserKey()));
+        if (isServer) {
+            //日志统计今日登录人数
+            redisUtil.incrby(NumberOfUser.getLoginUserKey(), 1L);
+            logger.info("登录账号-->" + account + "; 今日总登录数-->" + redisUtil.get(NumberOfUser.getLoginUserKey()));
+        }
         return user;
     }
 }

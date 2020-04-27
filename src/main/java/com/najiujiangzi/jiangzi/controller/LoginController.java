@@ -1,16 +1,16 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.najiujiangzi.jiangzi.dto.UserDTO;
+import com.najiujiangzi.jiangzi.config.WebSecurityConfig;
 import com.najiujiangzi.jiangzi.enums.GenderType;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.util.NumberOfUser;
-import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -91,10 +91,9 @@ public class LoginController extends BaseController {
      */
     @ResponseBody
     @Transactional
+    @PreAuthorize("#email != null and #name != null")
     @RequestMapping("/register")
     public Map<String, Object> register(String email, String name) {
-        ValidationUtils.assertTrue(StringUtils.isEmpty(name), "用户名不能为空");
-        ValidationUtils.assertTrue(StringUtils.isEmpty(email), "邮箱不能为空");
         List<User> users = userService.registerByNameOrEmail(name, email);
         if (!CollectionUtils.isEmpty(users)) {
             Map<String, Object> map = new HashMap<>();
@@ -136,13 +135,10 @@ public class LoginController extends BaseController {
      * @return
      */
     @ResponseBody
+    @Transactional
+    @PreAuthorize("#name != null and #email != null and #gender != null and #password != null and #code != null ")
     @RequestMapping("/saveUser")
     public Map<String, Object> saveUser(String name, String email, Integer gender, String password, String code) {
-        ValidationUtils.assertTrue(StringUtils.isEmpty(name), "用户名不能为空");
-        ValidationUtils.assertTrue(StringUtils.isEmpty(email), "邮箱不能为空");
-        ValidationUtils.assertTrue(gender == null && GenderType.getByCode(gender) == null, "性别不能为空");
-        ValidationUtils.assertTrue(StringUtils.isEmpty(password), "密码不能为空");
-        ValidationUtils.assertTrue(StringUtils.isEmpty(code), "验证码不能为空");
         if (isServer) {
             String emailCode = redisUtil.get("emailCode_" + email);
             if (emailCode == null) {
@@ -186,8 +182,7 @@ public class LoginController extends BaseController {
     @ResponseBody
     @RequestMapping("/test")
     public String test() {
-        UserDTO userDTO = getUserDTO();
-        System.out.println("=========" + userDTO);
+//        System.out.println(a.getName());
         return "test_ok";
     }
 }

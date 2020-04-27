@@ -4,8 +4,8 @@ import com.alibaba.druid.util.StringUtils;
 import com.najiujiangzi.jiangzi.config.WebSecurityConfig;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.service.UserService;
-import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +26,9 @@ public class UserController extends BaseController {
      * @param newPassword
      * @return
      */
+    @PreAuthorize("#oldPassword != null and #newPassword != null ")
     @RequestMapping("/updatePassword")
     public Map<String, Object> updatePassword(String oldPassword, String newPassword) {
-        ValidationUtils.assertTrue(StringUtils.isEmpty(oldPassword), "旧密码不能为空");
-        ValidationUtils.assertTrue(StringUtils.isEmpty(newPassword), "新密码不能为空");
         UserDTO user = getUserDTO();
         BCryptPasswordEncoder encoder = WebSecurityConfig.getEncoder();
         if (encoder.matches(oldPassword, user.getPassword())) {

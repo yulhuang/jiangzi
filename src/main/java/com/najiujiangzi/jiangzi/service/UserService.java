@@ -41,6 +41,7 @@ public class UserService {
         return userMapper.registerByNameOrEmail(name, email);
     }
 
+
     public int create(User user) {
         return userMapper.insert(user);
     }
@@ -60,7 +61,7 @@ public class UserService {
             user.setDeleted(false);
             String account = this.findMaxAccount();
             user.setAccount(account.substring(0, 2) + (Integer.parseInt(account.substring(2)) + 1));
-            int i = create(user);
+            int i = this.create(user);
             userRoleService.createCommonUser(user.getId());
         } finally {
             lock.unlock();

@@ -53,6 +53,20 @@
         </layout>
     </appender>
 
+    <appender name="ADMIN_ACCESS_UTIL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/admin_access_util.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <MaxFileSize>1MB</MaxFileSize>
+            <MaxHistory>30</MaxHistory>
+            <TotalSizeCap>5GB</TotalSizeCap>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
     <!-- 控制台输出日志级别 -->
     <root level="info">
         <appender-ref ref="STDOUT"/>
@@ -75,6 +89,10 @@
 
     <logger name="com.najiujiangzi.jiangzi.rocketMQ" level="DEBUG" additivity="false">
         <appender-ref ref="ADMIN_ACCESS"/>
+    </logger>
+
+    <logger name="com.najiujiangzi.jiangzi.util" level="DEBUG" additivity="false">
+        <appender-ref ref="ADMIN_ACCESS_UTIL"/>
     </logger>
 
 </configuration>

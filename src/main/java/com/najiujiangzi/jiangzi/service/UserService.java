@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class UserService {
@@ -44,19 +46,31 @@ public class UserService {
     }
 
     public void createUser(String name, String email, Integer gender, String password) {
-        String encode = WebSecurityConfig.getEncoder().encode(password);
-        User user = new User();
-        user.setName(name);
-        user.setCreate(LocalDateTime.now());
-        user.setGender(GenderType.getByCode(gender).getValue());
-        user.setEmail(email);
-        user.setPassword(encode);
-        user.setDeleted(false);
-        int i = create(user);
-        userRoleService.createCommonUser(user.getId());
+        Lock lock = new ReentrantLock();
+        lock.lock();
+        try {
+            String encode = WebSecurityConfig.getEncoder().encode(password);
+            User user = new User();
+            user.setName(name);
+            user.setCreate(LocalDateTime.now());
+            user.setGender(GenderType.getByCode(gender).getValue());
+            user.setEmail(email);
+            user.setPassword(encode);
+            user.setDeleted(false);
+            String account = this.findMaxAccount();
+            user.setAccount(account.substring(0, 2) + (Integer.parseInt(account.substring(2)) + 1));
+            int i = create(user);
+            userRoleService.createCommonUser(user.getId());
+        } finally {
+            lock.unlock();
+        }
     }
 
     public int updatePassword(UserDTO dto) {
         return userMapper.updatePassword(dto);
+    }
+
+    public String findMaxAccount() {
+        return userMapper.maxAccount("JZ%");
     }
 }

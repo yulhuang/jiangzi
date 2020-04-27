@@ -6,7 +6,6 @@ import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,7 @@ public class UserController extends BaseController {
     public Map<String, Object> updatePassword(String oldPassword, String newPassword) {
         ValidationUtils.assertTrue(StringUtils.isEmpty(oldPassword), "旧密码不能为空");
         ValidationUtils.assertTrue(StringUtils.isEmpty(newPassword), "新密码不能为空");
-        final UserDTO user = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO user = getUserDTO();
         BCryptPasswordEncoder encoder = WebSecurityConfig.getEncoder();
         if (encoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(encoder.encode(newPassword));

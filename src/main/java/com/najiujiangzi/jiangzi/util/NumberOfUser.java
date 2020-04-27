@@ -1,43 +1,39 @@
 package com.najiujiangzi.jiangzi.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class NumberOfUser {
-    //今日新增用户
-    private static int todayCreateUser = 0;
-    //今日登录过的用户
-    private static int todayLoginCount = 0;
-
-    private static Lock lock = new ReentrantLock();
-    private static Lock lock2 = new ReentrantLock();
+    @Autowired
+    private RedisUtil redisUtil;
+    private static String newUserKey = "todayNewUser:" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
+    private static String loginUserKey = "todayLoginUser:" + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
 
     //每日零点计数归零
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 1 0 * * ?")
     private void makeZero() {
-        todayCreateUser = 0;
-        todayLoginCount = 0;
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oldTime = LocalDateTime.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        log.info(oldTime + "共增用户-->" + redisUtil.get("todayNewUser:" + formatter.format(oldTime)));
+        log.info(oldTime + "登录总数-->" + redisUtil.get("todayLoginUser:" + formatter.format(oldTime)));
+        newUserKey = "todayNewUser:" + formatter.format(now);
+        loginUserKey = "todayLoginUser:" + formatter.format(now);
+        redisUtil.setex(newUserKey, "0", (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS));
+        redisUtil.setex(loginUserKey, "0", (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS));
     }
 
-    public static int addTodayCreateUser() {
-        lock.lock();
-        try {
-            ++todayCreateUser;
-        } finally {
-            lock.unlock();
-        }
-        return todayCreateUser;
+    public static String getNewUserKey() {
+        return newUserKey;
     }
 
-    public static int addTodayLoginCount() {
-        lock2.lock();
-        try {
-            ++todayLoginCount;
-        } finally {
-            lock2.unlock();
-        }
-        return todayLoginCount;
+    public static String getLoginUserKey() {
+        return loginUserKey;
     }
 }

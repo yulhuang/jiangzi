@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("statusCode", 401);
                     if (ex instanceof UsernameNotFoundException) {
-                        map.put("message", "用户名错误");
+                        map.put("message", "账号错误");
                     } else if (ex instanceof BadCredentialsException) {
                         map.put("message", "密码错误");
                     } else if (ex instanceof DisabledException) {

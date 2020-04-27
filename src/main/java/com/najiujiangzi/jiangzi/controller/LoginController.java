@@ -1,13 +1,11 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.alibaba.druid.util.StringUtils;
-import com.najiujiangzi.jiangzi.dto.VerificationDTO;
+import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.enums.GenderType;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
-import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.UserService;
-import com.najiujiangzi.jiangzi.service.VerificationService;
 import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import com.najiujiangzi.jiangzi.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +22,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
-//@RestController
 @Slf4j
 @Controller
 @RequestMapping("/login")
@@ -37,11 +35,6 @@ public class LoginController extends BaseController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private VerificationService verificationService;
-
 
 
     @RequestMapping("/toLogin")
@@ -102,18 +95,17 @@ public class LoginController extends BaseController {
     public Map<String, Object> register(String email, String name) {
         ValidationUtils.assertTrue(StringUtils.isEmpty(name), "用户名不能为空");
         ValidationUtils.assertTrue(StringUtils.isEmpty(email), "邮箱不能为空");
-        Map<String, Object> map = new HashMap<>();
         List<User> users = userService.registerByNameOrEmail(name, email);
         if (!CollectionUtils.isEmpty(users)) {
+            Map<String, Object> map = new HashMap<>();
             for (User user : users) {
+                map.put("success", false);
                 if (user.getName().equals(name)) {
                     map.put("statusCode", LoginStatus.NAMEEXCEPTION.getCode());
-                    map.put("success", false);
                     map.put("message", LoginStatus.NAMEEXCEPTION.getValue());
                     return map;
                 } else {
                     map.put("statusCode", LoginStatus.EMAILEXCEPTION.getCode());
-                    map.put("success", false);
                     map.put("message", LoginStatus.EMAILEXCEPTION.getValue());
                     return map;
                 }
@@ -122,20 +114,14 @@ public class LoginController extends BaseController {
         String code;
         if (isServer) {
             code = (int) ((Math.random() * 9 + 1) * 100000) + "";
-        } else {
-            code = "888888";
-        }
-        VerificationDTO dto = new VerificationDTO();
-        dto.setCode(code);
-        dto.setCreate(LocalDateTime.now());
-        dto.setEmail(email);
-        verificationService.insert(dto);
-        //邮件发送验证码
-        try {
-            producer.emailAsyncProducer(email, code);
-            //emailService.sendVerification(email, "验证码", code);
-        } catch (Exception e) {
-            throw new RuntimeException("验证码发送失败！");
+            redisUtil.setex("emailCode_" + email, code, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES));
+            //邮件发送验证码
+            try {
+                producer.emailAsyncProducer(email, code);
+                //emailService.sendVerification(email, "验证码", code);
+            } catch (Exception e) {
+                throw new RuntimeException("验证码发送失败！");
+            }
         }
         return ok();
     }
@@ -158,17 +144,33 @@ public class LoginController extends BaseController {
         ValidationUtils.assertTrue(gender == null && GenderType.getByCode(gender) == null, "性别不能为空");
         ValidationUtils.assertTrue(StringUtils.isEmpty(password), "密码不能为空");
         ValidationUtils.assertTrue(StringUtils.isEmpty(code), "验证码不能为空");
-        VerificationDTO byCodeAndCreate = verificationService.findByCodeAndEmail(code, email);
-        if (byCodeAndCreate == null) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("statusCode", false);
-            map.put("message", "验证码错误或失效");
-            return map;
+        if (isServer) {
+            String emailCode = redisUtil.get("emailCode_" + email);
+            if (emailCode == null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("statusCode", false);
+                map.put("message", "验证码失效");
+                return map;
+            } else if (!emailCode.equals(code)) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("statusCode", false);
+                map.put("message", "验证码错误");
+                return map;
+            }
+        } else {
+            if (!code.equals("888888")) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("statusCode", false);
+                map.put("message", "验证码错误");
+                return map;
+            }
         }
-        userService.createUser(name, email, gender, password);
-        verificationService.deleteById(byCodeAndCreate.getId());
 
-        log.info("今天新增用户" + NumberOfUser.addTodayCreateUser());
+        userService.createUser(name, email, gender, password);
+        redisUtil.del("emailCode_" + email);
+        //日志统计今日新增用户
+        redisUtil.incrby(NumberOfUser.getNewUserKey(), 1L);
+        log.info(LocalDateTime.now() + "新增用户-->" + email + "; 今日共增-->" + redisUtil.get(NumberOfUser.getNewUserKey()));
         return ok();
     }
 
@@ -181,5 +183,13 @@ public class LoginController extends BaseController {
             e.printStackTrace();
         }
         return "email_ok";
+    }
+
+    @ResponseBody
+    @RequestMapping("/test")
+    public String test() {
+        UserDTO userDTO = getUserDTO();
+        System.out.println("=========" + userDTO);
+        return "test_ok";
     }
 }

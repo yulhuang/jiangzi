@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class User {
     private Long id;
     private String name;
+    private String account;
     private String gender;
     private LocalDateTime birthday;
     private String email;
@@ -20,6 +21,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", account='" + account + '\'' +
                 ", gender='" + gender + '\'' +
                 ", birthday=" + birthday +
                 ", email='" + email + '\'' +
@@ -28,8 +30,16 @@ public class User {
                 ", create=" + create +
                 ", update=" + update +
                 ", deleted=" + deleted +
-                ", token=" + token +
+                ", token='" + token + '\'' +
                 '}';
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getToken() {

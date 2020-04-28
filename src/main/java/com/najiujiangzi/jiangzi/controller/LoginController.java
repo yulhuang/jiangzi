@@ -1,8 +1,6 @@
 package com.najiujiangzi.jiangzi.controller;
 
-import com.alibaba.druid.util.StringUtils;
-import com.najiujiangzi.jiangzi.config.WebSecurityConfig;
-import com.najiujiangzi.jiangzi.enums.GenderType;
+import com.najiujiangzi.jiangzi.annotation.Null;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.service.UserService;
@@ -89,9 +87,10 @@ public class LoginController extends BaseController {
      * @param name
      * @return
      */
+    @Null
     @ResponseBody
     @Transactional
-    @PreAuthorize("#email != null and #name != null")
+    //@PreAuthorize("!#email.equals('') and !#name.equals('')")
     @RequestMapping("/register")
     public Map<String, Object> register(String email, String name) {
         List<User> users = userService.registerByNameOrEmail(name, email);
@@ -134,9 +133,10 @@ public class LoginController extends BaseController {
      * @param code
      * @return
      */
+    @Null
     @ResponseBody
     @Transactional
-    @PreAuthorize("#name != null and #email != null and #gender != null and #password != null and #code != null ")
+    //@PreAuthorize("!#name.equals('') and !#email.equals('') and #gender != null and !#password.equals('') and !#code.equals('') ")
     @RequestMapping("/saveUser")
     public Map<String, Object> saveUser(String name, String email, Integer gender, String password, String code) {
         if (isServer) {
@@ -179,9 +179,12 @@ public class LoginController extends BaseController {
         return "email_ok";
     }
 
+    @Null("name,email")
     @ResponseBody
+//    @PreAuthorize("!#name.equals('') and !#user.email.equals('')")
     @RequestMapping("/test")
-    public String test() {
+    public String test(String name, String email) {
+        System.out.println("test_ok");
 //        System.out.println(a.getName());
         return "test_ok";
     }

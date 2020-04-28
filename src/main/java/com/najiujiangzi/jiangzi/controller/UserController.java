@@ -1,12 +1,14 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.alibaba.druid.util.StringUtils;
+import com.najiujiangzi.jiangzi.annotation.Null;
 import com.najiujiangzi.jiangzi.config.WebSecurityConfig;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +28,9 @@ public class UserController extends BaseController {
      * @param newPassword
      * @return
      */
-    @PreAuthorize("#oldPassword != null and #newPassword != null ")
+    @Null
+    @Transactional
+    //@PreAuthorize("!#oldPassword.equals('') and !#newPassword.equals('') ")
     @RequestMapping("/updatePassword")
     public Map<String, Object> updatePassword(String oldPassword, String newPassword) {
         UserDTO user = getUserDTO();

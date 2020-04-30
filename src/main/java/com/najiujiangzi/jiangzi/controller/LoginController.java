@@ -108,15 +108,13 @@ public class LoginController extends BaseController {
             }
         }
         String code;
-        if (isServer) {
-            code = (int) ((Math.random() * 9 + 1) * 100000) + "";
-            redisUtil.setex("emailCode_" + email, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES), code);
-            //邮件发送验证码
-            try {
-                producer.emailAsyncProducer(email, code);
-            } catch (Exception e) {
-                throw new RuntimeException("验证码发送失败！");
-            }
+        code = (int) ((Math.random() * 9 + 1) * 100000) + "";
+        redisUtil.setex("emailCode_" + email, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES), code);
+        //邮件发送验证码
+        try {
+            producer.emailAsyncProducer(email, code);
+        } catch (Exception e) {
+            throw new RuntimeException("验证码发送失败！");
         }
         return ok();
     }
@@ -163,17 +161,6 @@ public class LoginController extends BaseController {
         redisUtil.incrby(NumberOfUser.getNewUserKey(), 1L);
         log.info(LocalDateTime.now() + "新增用户-->" + email + "; 今日共增-->" + redisUtil.get(NumberOfUser.getNewUserKey()));
         return ok();
-    }
-
-    @ResponseBody
-    @RequestMapping("/testEmail")
-    public String testEmail() {
-        try {
-            producer.emailAsyncProducer("297304818@qq.com", "888888");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "email_ok";
     }
 
 }

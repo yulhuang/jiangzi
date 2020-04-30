@@ -29,6 +29,9 @@ public class Consumer {
     @PostConstruct
     public void createdEmailConsumer() throws Exception {
         DefaultMQPushConsumer consumer = createConsumer("emailGroup");
+        if (consumer == null) {
+            return;
+        }
         consumer.subscribe("emailTopic", "emailTag");
         //广播模式（默认负载均衡模式）
 //        consumer.setMessageModel(MessageModel.BROADCASTING);
@@ -51,6 +54,9 @@ public class Consumer {
     }
 
     private DefaultMQPushConsumer createConsumer(String group) {
+        if (isserver) {
+            return null;
+        }
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(group);
         consumer.setNamesrvAddr(nameServerUrl);
         return consumer;

@@ -18,6 +18,8 @@ public class Producer {
     @Value("${rocketMQnameServer}")
     private String nameServerUrl;
 
+    @Value("${isServer}")
+    private boolean isServer;
 
     /**
      * 发送同步消息
@@ -49,6 +51,9 @@ public class Producer {
      */
     public void emailAsyncProducer(String email, String code) throws Exception {
         DefaultMQProducer producer = createdProducer("emailGroup");
+        if (producer == null) {
+            return;
+        }
         //发送失败后的重复发送次数
         //producer.setRetryTimesWhenSendAsyncFailed(0);
         Message message = new Message("emailTopic", "emailTag", (new EmailAndCodeDTO(email, "验证码", code).toString()).getBytes());
@@ -88,6 +93,9 @@ public class Producer {
     }
 
     private DefaultMQProducer createdProducer(String groupName) throws Exception {
+        if (isServer) {
+            return null;
+        }
         DefaultMQProducer producer = new DefaultMQProducer(groupName);
         producer.setNamesrvAddr(nameServerUrl);
         producer.start();

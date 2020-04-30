@@ -110,15 +110,13 @@ public class LoginController extends BaseController {
             }
         }
         String code;
-        if (isServer) {
-            code = (int) ((Math.random() * 9 + 1) * 100000) + "";
-            redisUtil.setex("emailCode_" + email, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES), code);
-            //邮件发送验证码
-            try {
-                producer.emailAsyncProducer(email, code);
-            } catch (Exception e) {
-                throw new RuntimeException("验证码发送失败！");
-            }
+        code = (int) ((Math.random() * 9 + 1) * 100000) + "";
+        redisUtil.setex("emailCode_" + email, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES), code);
+        //邮件发送验证码
+        try {
+            producer.emailAsyncProducer(email, code);
+        } catch (Exception e) {
+            throw new RuntimeException("验证码发送失败！");
         }
         return ok();
     }

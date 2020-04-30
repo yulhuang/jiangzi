@@ -1,6 +1,7 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.najiujiangzi.jiangzi.annotation.Null;
+import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.service.UserService;
@@ -8,7 +9,6 @@ import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -112,7 +112,7 @@ public class LoginController extends BaseController {
         String code;
         if (isServer) {
             code = (int) ((Math.random() * 9 + 1) * 100000) + "";
-            redisUtil.setex("emailCode_" + email, code, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES));
+            redisUtil.setex("emailCode_" + email, (int) TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES), code);
             //邮件发送验证码
             try {
                 producer.emailAsyncProducer(email, code);
@@ -179,13 +179,10 @@ public class LoginController extends BaseController {
         return "email_ok";
     }
 
-    @Null("name,email")
+    //    @Null("name,email")
     @ResponseBody
-//    @PreAuthorize("!#name.equals('') and !#user.email.equals('')")
     @RequestMapping("/test")
-    public String test(String name, String email) {
-        System.out.println("test_ok");
-//        System.out.println(a.getName());
+    public String test(UserDTO dto) {
         return "test_ok";
     }
 }

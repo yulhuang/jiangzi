@@ -1,16 +1,18 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.ThumbsImageDTO;
 import com.najiujiangzi.jiangzi.model.ThumbsImage;
 import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.annotations.Options;
 
 import java.util.List;
 
+@RedisCache
 public interface ThumbsImageMapper {
 
     @Select("<script>" +
@@ -29,9 +31,9 @@ public interface ThumbsImageMapper {
 
     @Insert("insert into `p_thumbs_image`(`user_id`,`image_id`,`create`,`deleted`)  values(#{userId},#{imageId},#{create},#{deleted})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insert(ThumbsImage model);
+    boolean insert(ThumbsImage model);
 
     @Update("update `p_thumbs_image` set user_id=#{userId},image_id=#{imageId},create=#{create},deleted=#{deleted} where id=#{id}")
-    int update(ThumbsImageDTO dto);
+    boolean update(ThumbsImageDTO dto);
 
 }

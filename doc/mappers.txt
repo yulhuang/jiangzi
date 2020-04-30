@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.@dtoName;
 import com.najiujiangzi.jiangzi.model.@modelName;
 import com.najiujiangzi.jiangzi.util.Page;
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.Options;
 
 import java.util.List;
 
+@RedisCache
 public interface @mapperName {
 
     @Select("<script>" +
@@ -25,9 +27,9 @@ public interface @mapperName {
     //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串作,为sql的语句
     @InsertProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insert(@modelName model);
+    boolean insert(@modelName model);
 
-     @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "updateSql")
-     int update(@modelName model);
+    @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "updateSql")
+    boolean update(@modelName model);
 
 }

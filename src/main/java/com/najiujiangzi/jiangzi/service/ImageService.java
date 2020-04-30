@@ -22,11 +22,11 @@ public class ImageService {
         return this.find(new ImageDTO(), null).get(0);
     }
 
-    public int insert(ImageDTO dto) {
+    public Boolean insert(ImageDTO dto) {
         return imageMapper.insert(dto);
     }
 
-    public int update(ImageDTO dto) {
+    public Boolean update(ImageDTO dto) {
         return imageMapper.update(dto);
     }
 }

@@ -22,11 +22,11 @@ public class ImageGroupService {
         return this.find(new ImageGroupDTO(), null).get(0);
     }
 
-    public int insert(ImageGroupDTO dto) {
+    public Boolean insert(ImageGroupDTO dto) {
         return image_groupMapper.insert(dto);
     }
 
-    public int update(ImageGroupDTO dto) {
+    public Boolean update(ImageGroupDTO dto) {
         return image_groupMapper.update(dto);
     }
 }

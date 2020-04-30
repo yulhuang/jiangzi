@@ -29,11 +29,11 @@ public class UserService {
         return userMapper.findOne(dto);
     }
 
-    public int insert(UserDTO dto) {
+    public Boolean insert(UserDTO dto) {
         return userMapper.insert(dto);
     }
 
-    public int update(UserDTO dto) {
+    public Boolean update(User dto) {
         return userMapper.update(dto);
     }
 
@@ -42,7 +42,7 @@ public class UserService {
     }
 
 
-    public int create(User user) {
+    public Boolean create(User user) {
         return userMapper.insert(user);
     }
 
@@ -61,18 +61,19 @@ public class UserService {
             user.setDeleted(false);
             String account = this.findMaxAccount();
             user.setAccount(account.substring(0, 2) + (Integer.parseInt(account.substring(2)) + 1));
-            int i = this.create(user);
+            boolean i = this.create(user);
             userRoleService.createCommonUser(user.getId());
         } finally {
             lock.unlock();
         }
     }
 
-    public int updatePassword(UserDTO dto) {
+    public Boolean updatePassword(UserDTO dto) {
         return userMapper.updatePassword(dto);
     }
 
-    public String findMaxAccount() {
+    private String findMaxAccount() {
         return userMapper.maxAccount("JZ%");
     }
+
 }

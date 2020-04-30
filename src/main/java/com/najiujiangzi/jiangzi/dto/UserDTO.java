@@ -75,6 +75,6 @@ public class UserDTO extends User implements UserDetails {
     //是否可用
     @Override
     public boolean isEnabled() {
-        return !super.getDeleted();
+        return super.getDeleted() == null || !super.getDeleted();
     }
 }

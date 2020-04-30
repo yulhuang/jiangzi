@@ -1,16 +1,18 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.EnshrineGroupDTO;
 import com.najiujiangzi.jiangzi.model.EnshrineGroup;
 import com.najiujiangzi.jiangzi.util.Page;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.annotations.Options;
 
 import java.util.List;
 
+@RedisCache
 public interface EnshrineGroupMapper {
 
     @Select("<script>" +
@@ -30,9 +32,9 @@ public interface EnshrineGroupMapper {
 
     @Insert("insert into `e_enshrine_group`(`user_id`,`name`,`number_content`,`create`,`deleted`)  values(#{user_id},#{name},#{number_content},#{create},#{deleted})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insert(EnshrineGroup model);
+    boolean insert(EnshrineGroup model);
 
     @Update("update `e_enshrine_group` set user_id=#{user_id},name=#{name},number_content=#{number_content},create=#{create},deleted=#{deleted} where id=#{id}")
-    int update(EnshrineGroupDTO dto);
+    boolean update(EnshrineGroupDTO dto);
 
 }

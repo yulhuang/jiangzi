@@ -22,11 +22,11 @@ public class PersistentLoginsService {
         return this.find(new PersistentLoginsDTO(), null).get(0);
     }
 
-    public int insert(PersistentLoginsDTO dto) {
+    public Boolean insert(PersistentLoginsDTO dto) {
         return persistentLoginsMapper.insert(dto);
     }
 
-    public int update(PersistentLoginsDTO dto) {
+    public Boolean update(PersistentLoginsDTO dto) {
         return persistentLoginsMapper.update(dto);
     }
 }

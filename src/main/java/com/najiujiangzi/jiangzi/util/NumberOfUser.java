@@ -25,8 +25,8 @@ public class NumberOfUser {
         log.info(oldTime + "登录总数-->" + redisUtil.get("todayLoginUser:" + formatter.format(oldTime)));
         newUserKey = "todayNewUser:" + formatter.format(now);
         loginUserKey = "todayLoginUser:" + formatter.format(now);
-        redisUtil.setex(newUserKey, "0", (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS));
-        redisUtil.setex(loginUserKey, "0", (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS));
+        redisUtil.setex(newUserKey, (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS), "0");
+        redisUtil.setex(loginUserKey, (int) TimeUnit.SECONDS.convert(2, TimeUnit.DAYS), "0");
     }
 
     public static String getNewUserKey() {

@@ -1,15 +1,18 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.ImageDTO;
 import com.najiujiangzi.jiangzi.model.Image;
 import com.najiujiangzi.jiangzi.util.Page;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
+@RedisCache
 public interface ImageMapper {
 
     @Select("<script>" +
@@ -32,9 +35,10 @@ public interface ImageMapper {
     List<Image> find(@Param("dto") ImageDTO dto, @Param("page") Page page);
 
 	@Insert("insert into `p_image`(`user_id`,`image_group_id`,`image_url`,`describe`,`create`,`update`,`type`)  values(#{user_id},#{image_group_id},#{image_url},#{describe},#{create},#{update},#{type})")
-	int insert(Image model);
+	@Options(useGeneratedKeys = true, keyProperty = "series")
+	boolean insert(Image model);
 
     @Update("update `p_image` set user_id=#{user_id},image_group_id=#{image_group_id},image_url=#{image_url},describe=#{describe},create=#{create},update=#{update},type=#{type} where id=#{id}")
-	int update(ImageDTO dto);
+	boolean update(ImageDTO dto);
 
 }

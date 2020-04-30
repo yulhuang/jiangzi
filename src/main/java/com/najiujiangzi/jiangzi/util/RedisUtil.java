@@ -1,17 +1,23 @@
 package com.najiujiangzi.jiangzi.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import java.util.Set;
 
 @Component
 public class RedisUtil {
     @Autowired
     private JedisPool jedisPool;
 
+    @Value("${isServer}")
+    private boolean isServer;
+
     private Jedis getResource() {
-        return jedisPool.getResource();
+        return isServer ? jedisPool.getResource() : null;
     }
 
     private void close(Jedis jedis) {
@@ -27,8 +33,11 @@ public class RedisUtil {
      * @param value
      * @return
      */
-    public boolean set(String key, String value) {
+    public Boolean set(String key, String value) {
         Jedis resource = getResource();
+        if (resource == null) {
+            return null;
+        }
         String set = resource.set(key, value);
         close(resource);
         return set.equals("OK");
@@ -42,15 +51,14 @@ public class RedisUtil {
      * @param time
      * @return
      */
-    public boolean setex(String key, String value, Integer time) {
-        if (time == null) {
-            return set(key, value);
-        } else {
-            Jedis resource = getResource();
-            String setex = resource.setex(key, time, value);
-            close(resource);
-            return setex.equals("OK");
+    public Boolean setex(String key, Integer time, String value) {
+        Jedis resource = getResource();
+        if (resource == null) {
+            return null;
         }
+        String setex = resource.setex(key, time, value);
+        close(resource);
+        return setex.equals("OK");
     }
 
     /**
@@ -61,6 +69,9 @@ public class RedisUtil {
      */
     public String get(String key) {
         Jedis resource = getResource();
+        if (resource == null) {
+            return null;
+        }
         String s = resource.get(key);
         close(resource);
         return s;
@@ -72,21 +83,27 @@ public class RedisUtil {
      * @param key
      * @return
      */
-    public boolean exists(String... key) {
+    public Boolean exists(String... key) {
         Jedis resource = getResource();
+        if (resource == null) {
+            return null;
+        }
         Long exists = resource.exists(key);
         close(resource);
         return exists.intValue() == key.length;
     }
 
     /**
-     * 删除
+     * 删除，不可模糊匹配
      *
      * @param key
      * @return
      */
-    public boolean del(String... key) {
+    public Boolean del(String... key) {
         Jedis resource = getResource();
+        if (resource == null) {
+            return null;
+        }
         Long del = resource.del(key);
         close(resource);
         return del.intValue() == key.length;
@@ -100,7 +117,27 @@ public class RedisUtil {
      */
     public void incrby(String key, Long increment) {
         Jedis resource = getResource();
+        if (resource == null) {
+            return;
+        }
         resource.incrBy(key, increment);
+        close(resource);
+    }
+
+    /**
+     * 删除key，可模糊匹配，如key*
+     *
+     * @param keys
+     */
+    public void delKeys(String keys) {
+        Jedis resource = getResource();
+        if (resource == null) {
+            return;
+        }
+        Set<String> keysSet = resource.keys(keys);
+        for (String s : keysSet) {
+            resource.del(s);
+        }
         close(resource);
     }
 }

@@ -4,6 +4,7 @@ import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.rocketMQ.Consumer;
 import com.najiujiangzi.jiangzi.rocketMQ.Producer;
 import com.najiujiangzi.jiangzi.service.EmailService;
+import com.najiujiangzi.jiangzi.service.RoleService;
 import com.najiujiangzi.jiangzi.service.UserService;
 import com.najiujiangzi.jiangzi.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class BaseController {
     protected Consumer consumer;
     @Autowired
     protected RedisUtil redisUtil;
+    @Autowired
+    protected RoleService roleService;
 
     Map<String, Object> ok() {
         Map<String, Object> map = new HashMap<>();

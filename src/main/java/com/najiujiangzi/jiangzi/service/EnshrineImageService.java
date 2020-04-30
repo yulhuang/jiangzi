@@ -22,11 +22,11 @@ public class EnshrineImageService {
         return this.find(new EnshrineImageDTO(), null).get(0);
     }
 
-    public int insert(EnshrineImageDTO dto) {
+    public Boolean insert(EnshrineImageDTO dto) {
         return enshrineImageMapper.insert(dto);
     }
 
-    public int update(EnshrineImageDTO dto) {
+    public Boolean update(EnshrineImageDTO dto) {
         return enshrineImageMapper.update(dto);
     }
 }

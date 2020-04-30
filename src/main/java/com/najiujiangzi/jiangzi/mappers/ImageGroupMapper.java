@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.ImageGroupDTO;
 import com.najiujiangzi.jiangzi.model.ImageGroup;
 import com.najiujiangzi.jiangzi.util.Page;
@@ -10,6 +11,7 @@ import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
+@RedisCache
 public interface ImageGroupMapper {
 
     @Select("<script>" +
@@ -28,9 +30,9 @@ public interface ImageGroupMapper {
     List<ImageGroup> find(@Param("dto") ImageGroupDTO dto, @Param("page") Page page);
 
     @Insert("insert into `p_image_group`(`name`,`describe`,`type`,`image_count`)  values(#{name},#{describe},#{type},#{image_count})")
-    int insert(ImageGroup model);
+    boolean insert(ImageGroup model);
 
     @Update("update `p_image_group` set name=#{name},describe=#{describe},type=#{type},image_count=#{image_count} where id=#{id}")
-    int update(ImageGroupDTO dto);
+    boolean update(ImageGroupDTO dto);
 
 }

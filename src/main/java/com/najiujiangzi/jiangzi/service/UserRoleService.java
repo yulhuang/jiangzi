@@ -18,7 +18,7 @@ public class UserRoleService {
         return userRoleMapper.find(dto, page);
     }
 
-    public int createCommonUser(Long userId) {
+    public Boolean createCommonUser(Long userId) {
         return userRoleMapper.insertCommonUser(userId);
     }
 }

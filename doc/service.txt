@@ -22,11 +22,11 @@ public class @serviceName {
         return this.find(new @dtoName(), null).get(0);
     }
 
-    public int insert(@dtoName dto) {
+    public Boolean insert(@dtoName dto) {
         return @toMapperName.insert(dto);
     }
 
-    public int update(@dtoName dto) {
+    public Boolean update(@dtoName dto) {
         return @toMapperName.update(dto);
     }
 }

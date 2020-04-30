@@ -4,8 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.util.NumberOfUser;
 import com.najiujiangzi.jiangzi.util.RedisUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class MyUserDetailService implements UserDetailsService {
-    protected final static Logger logger = LoggerFactory.getLogger(MyUserDetailService.class);
 
     @Autowired
     private UserService userService;
@@ -42,7 +41,7 @@ public class MyUserDetailService implements UserDetailsService {
         if (isServer) {
             //日志统计今日登录人数
             redisUtil.incrby(NumberOfUser.getLoginUserKey(), 1L);
-            logger.info("登录账号-->" + account + "; 今日总登录数-->" + redisUtil.get(NumberOfUser.getLoginUserKey()));
+            log.info("登录账号-->" + account + "; 今日总登录数-->" + redisUtil.get(NumberOfUser.getLoginUserKey()));
         }
         return user;
     }

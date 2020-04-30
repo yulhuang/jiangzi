@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.RoleDTO;
 import com.najiujiangzi.jiangzi.model.Role;
 import com.najiujiangzi.jiangzi.util.Page;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+@RedisCache
 public interface RoleMapper {
 
     @Select("<script>" +
@@ -26,6 +28,5 @@ public interface RoleMapper {
             " LEFT JOIN sys_user u ON ur.user_id = u.id " +
             " WHERE u.id = #{userId} AND u.deleted = 0")
     List<Role> findByUserId(Long userId);
-
 
 }

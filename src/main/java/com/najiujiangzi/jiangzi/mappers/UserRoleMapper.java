@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.UserRoleDTO;
 import com.najiujiangzi.jiangzi.model.UserRole;
 import com.najiujiangzi.jiangzi.util.Page;
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+@RedisCache
 public interface UserRoleMapper {
 
     @Select("<script>" +
@@ -24,5 +26,5 @@ public interface UserRoleMapper {
     List<UserRole> find(@Param("dto")UserRoleDTO dto, @Param("page")Page page);
 
     @Insert("INSERT INTO sys_user_role(`user_id`, `role_id`) values(#{userId}, (select id from sys_role where name = 'COMMON'))")
-    int insertCommonUser(Long userId);
+    boolean insertCommonUser(Long userId);
 }

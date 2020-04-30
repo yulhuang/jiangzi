@@ -22,11 +22,11 @@ public class EnshrineGroupService {
         return this.find(new EnshrineGroupDTO(), null).get(0);
     }
 
-    public int insert(EnshrineGroupDTO dto) {
+    public Boolean insert(EnshrineGroupDTO dto) {
         return enshrineGroupMapper.insert(dto);
     }
 
-    public int update(EnshrineGroupDTO dto) {
+    public Boolean update(EnshrineGroupDTO dto) {
         return enshrineGroupMapper.update(dto);
     }
 }

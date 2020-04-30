@@ -29,19 +29,10 @@ public class NotNullAOP {
      */
 //    @Around("execution(* com.najiujiangzi.jiangzi.controller.*.test(..))")
     public Object run1(ProceedingJoinPoint joinPoint) throws Throwable {
-        //获取方法参数值数组
-        Object[] args = joinPoint.getArgs();
-        for (Object arg : args) {
-            System.out.println(arg);
-        }
         //得到其方法签名
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         //获取方法参数类型数组
         Class[] paramTypeArray = methodSignature.getParameterTypes();
-        System.out.println("===========================");
-        for (Class aClass : paramTypeArray) {
-            System.out.println(aClass);
-        }
         /*ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         System.out.println("<=====================================================");
@@ -80,7 +71,7 @@ public class NotNullAOP {
         }
         if (value.equals("ALL")) {
             if (list.contains(null) || list.contains("")) {
-                throw new RuntimeException("所有参数不能为空");
+                throw new RuntimeException("存在为空参数；");
             }
         } else {
             for (int i = 0; i < name.size(); i++) {

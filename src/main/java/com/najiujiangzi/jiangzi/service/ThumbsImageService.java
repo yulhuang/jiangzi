@@ -22,11 +22,11 @@ public class ThumbsImageService {
         return this.find(new ThumbsImageDTO(), null).get(0);
     }
 
-    public int insert(ThumbsImageDTO dto) {
+    public Boolean insert(ThumbsImageDTO dto) {
         return thumbsImageMapper.insert(dto);
     }
 
-    public int update(ThumbsImageDTO dto) {
+    public Boolean update(ThumbsImageDTO dto) {
         return thumbsImageMapper.update(dto);
     }
 }

@@ -1,5 +1,6 @@
 package com.najiujiangzi.jiangzi.mappers;
 
+import com.najiujiangzi.jiangzi.annotation.RedisCache;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.Page;
@@ -11,8 +12,9 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-//@Repository
+@RedisCache
 public interface UserMapper {
 
     @Select("<script>" +
@@ -39,13 +41,13 @@ public interface UserMapper {
     //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串  作为sql的语句
     @InsertProvider(type = com.najiujiangzi.jiangzi.sqlClass.UserSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int insert(User model);
+    boolean insert(User model);
 
 //    @Update("update user set name=#{name} where id=#{id}")
 //    int update(UserDTO dto);
 
     @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.UserSql.class, method = "updateSql")
-    int update(User model);
+    boolean update(User model);
 
     @Select("<script>" +
             " SELECT * FROM sys_user" +
@@ -71,7 +73,7 @@ public interface UserMapper {
     List<User> registerByNameOrEmail(String name, String email);
 
     @Update("update sys_user set password=#{password} where id=#{id}")
-    int updatePassword(UserDTO dto);
+    boolean updatePassword(UserDTO dto);
 
     @Select("SELECT MAX(account) FROM sys_user WHERE account LIKE #{prefix}")
     String maxAccount(String prefix);

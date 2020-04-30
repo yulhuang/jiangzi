@@ -66,8 +66,8 @@ public class CreateMDMSCBySql {
 
     private void create(String sql) throws Exception {
         parse(sql);
-//        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "sqlClass"};
-        String[] MVC = new String[]{"mappers", "sqlClass"};
+        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "mappers\\sql"};
+//        String[] MVC = new String[]{"mappers", "mappers\\\\sql"};
         StringBuilder stringBuilder = new StringBuilder();
         String tableName = this.tableName.replaceAll("`", "").substring(this.tableName.indexOf("_"));
         String className = "";
@@ -176,7 +176,7 @@ public class CreateMDMSCBySql {
                             .replaceAll("@toServiceName", serviceName.substring(0, 1).toLowerCase() + serviceName.substring(1));
                     FileUtils.write(new File(fromUrl + s + "//" + controllerName + ".java"), newController);
                     break;
-                case "sqlClass":
+                case "mappers\\\\sql":
                     StringBuilder saveValues = new StringBuilder();
                     StringBuilder updateValue = new StringBuilder();
                     //if (model.getName() != null) {
@@ -198,7 +198,7 @@ public class CreateMDMSCBySql {
                                 .append("\t\t\t\t\t}\n");
                     }*/
                     String sqlName = className + "Sql";
-                    String sqlUrl = url + s + ".txt";
+                    String sqlUrl = url + "sql.txt";
                     String sqlClass = FileUtils.readFileToString(new File(sqlUrl));
                     String newSqlClass = sqlClass.replaceAll("@tableName", this.tableName).replaceAll("@modelName", className)
                             .replaceAll("@saveValues", String.valueOf(saveValues))

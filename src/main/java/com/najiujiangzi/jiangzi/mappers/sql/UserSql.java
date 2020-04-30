@@ -1,4 +1,4 @@
-package com.najiujiangzi.jiangzi.sql;
+package com.najiujiangzi.jiangzi.mappers.sql;
 
 import com.najiujiangzi.jiangzi.model.User;
 import org.apache.ibatis.jdbc.SQL;

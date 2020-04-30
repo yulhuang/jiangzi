@@ -1,8 +1,8 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.najiujiangzi.jiangzi.dto.UserDTO;
-import com.najiujiangzi.jiangzi.rocketMQ.Consumer;
-import com.najiujiangzi.jiangzi.rocketMQ.Producer;
+import com.najiujiangzi.jiangzi.rocketmq.Consumer;
+import com.najiujiangzi.jiangzi.rocketmq.Producer;
 import com.najiujiangzi.jiangzi.service.EmailService;
 import com.najiujiangzi.jiangzi.service.RoleService;
 import com.najiujiangzi.jiangzi.service.UserService;

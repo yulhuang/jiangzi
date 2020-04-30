@@ -87,7 +87,7 @@
 		<appender-ref ref="ADMIN_ACCESS"/>
 	</logger>
 
-    <logger name="com.najiujiangzi.jiangzi.rocketMQ" level="DEBUG" additivity="false">
+    <logger name="com.najiujiangzi.jiangzi.rocketmq" level="DEBUG" additivity="false">
         <appender-ref ref="ADMIN_ACCESS"/>
     </logger>
 

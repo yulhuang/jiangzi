@@ -1,4 +1,4 @@
-package com.najiujiangzi.jiangzi.rocketMQ;
+package com.najiujiangzi.jiangzi.rocketmq;
 
 import com.najiujiangzi.jiangzi.dto.EmailAndCodeDTO;
 import lombok.extern.slf4j.Slf4j;

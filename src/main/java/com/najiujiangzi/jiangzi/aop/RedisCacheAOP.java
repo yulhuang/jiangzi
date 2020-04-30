@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.najiujiangzi.jiangzi.annotation.RedisCache;
-import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;

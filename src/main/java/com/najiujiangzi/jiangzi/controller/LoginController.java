@@ -1,7 +1,6 @@
 package com.najiujiangzi.jiangzi.controller;
 
 import com.najiujiangzi.jiangzi.annotation.Null;
-import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.enums.LoginStatus;
 import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.service.UserService;
@@ -90,7 +89,6 @@ public class LoginController extends BaseController {
     @Null
     @ResponseBody
     @Transactional
-    //@PreAuthorize("!#email.equals('') and !#name.equals('')")
     @RequestMapping("/register")
     public Map<String, Object> register(String email, String name) {
         List<User> users = userService.registerByNameOrEmail(name, email);
@@ -136,7 +134,6 @@ public class LoginController extends BaseController {
     @Null
     @ResponseBody
     @Transactional
-    //@PreAuthorize("!#name.equals('') and !#email.equals('') and #gender != null and !#password.equals('') and !#code.equals('') ")
     @RequestMapping("/saveUser")
     public Map<String, Object> saveUser(String name, String email, Integer gender, String password, String code) {
         if (isServer) {
@@ -179,10 +176,4 @@ public class LoginController extends BaseController {
         return "email_ok";
     }
 
-    //    @Null("name,email")
-    @ResponseBody
-    @RequestMapping("/test")
-    public String test(UserDTO dto) {
-        return "test_ok";
-    }
 }

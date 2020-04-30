@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 public class Producer {
-//    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
 
     @Value("${rocketMQnameServer}")
     private String nameServerUrl;

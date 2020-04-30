@@ -42,7 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(myUserDetailService).passwordEncoder(new BCryptPasswordEncoder())
         auth.authenticationProvider(authenticationProvider());
     }
 
@@ -107,8 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.rememberMe().tokenRepository(persistentTokenRepository()).userDetailsService(myUserDetailService)
         // 有效时间：单位s
                 .tokenValiditySeconds(86400);
-        //指定前台传递的是否rememberme的参数名,前台要传递的参数值是true或false
-//        http.rememberMe().rememberMeParameter("rememberMe").rememberMeServices(persistentTokenRepository());
     }
 
     @Bean
@@ -127,8 +124,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         //配置数据源
         tokenRepository.setDataSource(dataSource);
-        // 如果token表不存在，使用下面语句可以初始化该表；若存在，请注释掉这条语句，否则会报错。
-//        tokenRepository.setCreateTableOnStartup(true);
         return tokenRepository;
     }
 

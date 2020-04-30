@@ -1,4 +1,4 @@
-package com.najiujiangzi.jiangzi.rocketMQ;
+package com.najiujiangzi.jiangzi.rocketmq;
 
 import com.najiujiangzi.jiangzi.service.EmailService;
 import org.apache.commons.collections.CollectionUtils;

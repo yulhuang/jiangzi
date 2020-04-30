@@ -25,11 +25,11 @@ public interface @mapperName {
     List<@modelName> find(@Param("dto") @dtoName dto, @Param("page") Page page);
 
     //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串作,为sql的语句
-    @InsertProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "save")
+    @InsertProvider(type = com.najiujiangzi.jiangzi.sql.@modelNameSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     boolean insert(@modelName model);
 
-    @UpdateProvider(type = com.najiujiangzi.jiangzi.sqlClass.@modelNameSql.class, method = "updateSql")
+    @UpdateProvider(type = com.najiujiangzi.jiangzi.sql.@modelNameSql.class, method = "updateSql")
     boolean update(@modelName model);
 
 }

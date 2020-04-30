@@ -1,4 +1,4 @@
-package com.najiujiangzi.jiangzi.sqlClass;
+package com.najiujiangzi.jiangzi.sql;
 
 import com.najiujiangzi.jiangzi.model.User;
 import org.apache.ibatis.jdbc.SQL;

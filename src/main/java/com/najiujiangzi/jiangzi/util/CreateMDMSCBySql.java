@@ -66,7 +66,7 @@ public class CreateMDMSCBySql {
 
     private void create(String sql) throws Exception {
         parse(sql);
-        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "mappers\\sql"};
+        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "mappers\\\\sql"};
 //        String[] MVC = new String[]{"mappers", "mappers\\\\sql"};
         StringBuilder stringBuilder = new StringBuilder();
         String tableName = this.tableName.replaceAll("`", "").substring(this.tableName.indexOf("_"));

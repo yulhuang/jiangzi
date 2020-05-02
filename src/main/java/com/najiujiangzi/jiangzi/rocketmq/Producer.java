@@ -93,7 +93,7 @@ public class Producer {
     }
 
     private DefaultMQProducer createdProducer(String groupName) throws Exception {
-        if (isServer) {
+        if (!isServer) {
             return null;
         }
         DefaultMQProducer producer = new DefaultMQProducer(groupName);

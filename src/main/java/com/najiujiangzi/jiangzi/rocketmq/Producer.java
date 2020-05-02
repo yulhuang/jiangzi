@@ -71,13 +71,6 @@ public class Producer {
     }
 
     /**
-     * 单向发送
-     */
-    public void oneWayProducer() {
-
-    }
-
-    /**
      * 顺序发送
      *
      * @throws Exception

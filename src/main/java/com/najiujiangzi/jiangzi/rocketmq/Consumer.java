@@ -21,7 +21,7 @@ public class Consumer {
     private String nameServerUrl;
 
     @Value("${isServer}")
-    private boolean isserver;
+    private boolean isServer;
 
     @Autowired
     private EmailService emailService;
@@ -52,7 +52,7 @@ public class Consumer {
     }
 
     private DefaultMQPushConsumer createConsumer(String group) {
-        if (isserver) {
+        if (!isServer) {
             return null;
         }
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(group);

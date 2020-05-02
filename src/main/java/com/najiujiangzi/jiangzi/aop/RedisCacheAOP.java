@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.najiujiangzi.jiangzi.annotation.RedisCache;
-import com.najiujiangzi.jiangzi.model.User;
 import com.najiujiangzi.jiangzi.util.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -58,7 +57,7 @@ public class RedisCacheAOP {
                 jedis.delKeys(pjp.getSignature().getDeclaringTypeName() + "*");
                 return retrunObj;
             }
-            value = retrunObj == null ? "isNull" : JSON.toJSONString(retrunObj);
+            value = JSON.toJSONString(retrunObj == null ? "isNull" : retrunObj);
         } catch (Throwable throwable) {
             throw new RuntimeException("原方法错误；");
         }
@@ -99,7 +98,7 @@ public class RedisCacheAOP {
                 throw new RuntimeException("该方法返回类型没有加泛型；");
             } else {
                 //如果返回类型不为list类型，则直接将结果转为返回值的类型的对象
-                return value.equals("isNull") ? "" : JSON.parseObject(value, Class.forName(type.getTypeName()));
+                return obj.equals("isNull") ? null : JSON.parseObject(value, Class.forName(type.getTypeName()));
             }
         } catch (ClassNotFoundException | JSONException var11) {
             throw new RuntimeException("返回数据报错；");

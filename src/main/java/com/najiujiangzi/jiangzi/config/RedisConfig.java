@@ -35,7 +35,6 @@ public class RedisConfig {
         jedisPoolConfig.setMaxIdle(max_idle);
         jedisPoolConfig.setMinIdle(min_idle);
         jedisPoolConfig.setMaxTotal(max_active);
-
         return new JedisPool(jedisPoolConfig, host, port, timeout, password);
     }
 }

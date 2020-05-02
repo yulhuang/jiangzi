@@ -48,7 +48,8 @@ public class Producer {
         DefaultMQProducer producer = createdProducer("emailGroup");
         if (producer == null) {
             return;
-        }        //发送失败后的重复发送次数
+        }
+        //发送失败后的重复发送次数
         //producer.setRetryTimesWhenSendAsyncFailed(0);
         Message message = new Message("emailTopic", "emailTag", (new EmailAndCodeDTO(email, "验证码", code).toString()).getBytes());
         producer.send(message, new SendCallback() {

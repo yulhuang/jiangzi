@@ -1,12 +1,10 @@
 package com.najiujiangzi.jiangzi.controller;
 
-import com.alibaba.druid.util.StringUtils;
 import com.najiujiangzi.jiangzi.annotation.Null;
 import com.najiujiangzi.jiangzi.config.WebSecurityConfig;
 import com.najiujiangzi.jiangzi.dto.UserDTO;
 import com.najiujiangzi.jiangzi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +28,6 @@ public class UserController extends BaseController {
      */
     @Null
     @Transactional
-    //@PreAuthorize("!#oldPassword.equals('') and !#newPassword.equals('') ")
     @RequestMapping("/updatePassword")
     public Map<String, Object> updatePassword(String oldPassword, String newPassword) {
         UserDTO user = getUserDTO();
@@ -45,13 +42,6 @@ public class UserController extends BaseController {
         }
         userService.updatePassword(user);
         return ok();
-    }
-
-    @RequestMapping("/test")
-    public Map<String, Object> test() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("ok","ok");
-        return map;
     }
 
 }

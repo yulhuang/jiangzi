@@ -48,9 +48,7 @@ public class Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
-        if (isserver) {
             consumer.start();
-        }
     }
 
     private DefaultMQPushConsumer createConsumer(String group) {

@@ -41,7 +41,6 @@ public class CreateMDMSCBySql {
         if (matcher.find()) {
             String tableName = matcher.group("tableName");
             String tableComment = matcher.group("tableComment");
-//            this.tableName = tableName.replaceAll("`", "").substring(tableName.indexOf("_"));
             this.tableName = tableName;
             this.tableComment = tableComment;
             System.out.println(tableName + "\t\t" + tableComment);
@@ -66,8 +65,8 @@ public class CreateMDMSCBySql {
 
     private void create(String sql) throws Exception {
         parse(sql);
-//        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "sqlClass"};
-        String[] MVC = new String[]{"mappers", "sqlClass"};
+        String[] MVC = new String[]{"model", "dto", "mappers", "service", "controller", "mappers\\\\sql"};
+//        String[] MVC = new String[]{"mappers", "mappers\\\\sql"};
         StringBuilder stringBuilder = new StringBuilder();
         String tableName = this.tableName.replaceAll("`", "").substring(this.tableName.indexOf("_"));
         String className = "";
@@ -134,14 +133,10 @@ public class CreateMDMSCBySql {
                     break;
                 case "mappers":
                     String ifs;
-                    //StringBuilder insertField = new StringBuilder();
-                    //StringBuilder dtoFields = new StringBuilder();
                     StringBuilder set = new StringBuilder();
                     for (int i = 0; i < fieldName.size(); i++) {
                         stringBuilder.append("\t\t\t\" <if test=\\\\\"dto." + fieldName.get(i) + " != null\\\\\">AND " + this.fieldName.get(i) + " = #{dto." + fieldName.get(i) + "}</if>\" +\n");
                         if (!fieldName.get(i).equals("id")) {
-                            /*insertField.append("`").append(this.fieldName.get(i)).append("`").append(",");
-                            dtoFields.append("#{").append(fieldName.get(i)).append("},");*/
                             set.append(this.fieldName.get(i)).append("=").append("#{").append(fieldName.get(i)).append("},");
                         }
                     }
@@ -153,8 +148,6 @@ public class CreateMDMSCBySql {
                     String mapper = FileUtils.readFileToString(new File(mapperlUrl));
                     String newMapper = mapper.replaceAll("@dtoName", dtoName).replaceAll("@modelName", className).replaceAll("@mapperName", mapperName)
                             .replaceAll("@tableName", this.tableName).replaceAll("@if", ifs)
-                            //.replaceAll("@insertField", insertField.delete(insertField.length() - 1, insertField.length()).toString())
-                            //.replaceAll("@dtoFields", dtoFields.delete(dtoFields.length() - 1, dtoFields.length()).toString())
                             .replaceAll("@set", set.delete(set.length() - 1, set.length()).toString());
                     FileUtils.write(new File(fromUrl + s + "\\" + mapperName + ".java"), newMapper);
                     break;
@@ -176,12 +169,9 @@ public class CreateMDMSCBySql {
                             .replaceAll("@toServiceName", serviceName.substring(0, 1).toLowerCase() + serviceName.substring(1));
                     FileUtils.write(new File(fromUrl + s + "//" + controllerName + ".java"), newController);
                     break;
-                case "sqlClass":
+                case "mappers\\\\sql":
                     StringBuilder saveValues = new StringBuilder();
                     StringBuilder updateValue = new StringBuilder();
-                    //if (model.getName() != null) {
-                    //                        SET("`name` = #{name}");
-                    //                    }
                     for (int i = 0; i < fieldName.size(); i++) {
                         String methodName = fieldName.get(i).substring(0, 1).toUpperCase() + fieldName.get(i).substring(1);
                         saveValues.append("\t\t\t\tif (model.get" + methodName + "() != null) {\n")
@@ -191,14 +181,8 @@ public class CreateMDMSCBySql {
                                 .append("\t\t\t\t\tSET(\"`" + this.fieldName.get(i) + "` = #{" + fieldName.get(i) + "}\");\n")
                                 .append("\t\t\t\t}\n");
                     }
-                    /*for (String field : fieldName) {
-                        String methodName = field.substring(0, 1).toUpperCase() + field.substring(1);
-                        saveValues.append("\t\t\t\tif (model.get" + methodName + "() != null) {\n")
-                                .append("\t\t\t\t\tVALUES(\"`" + field + "`\", \"#{" + field + "}\");\n")
-                                .append("\t\t\t\t\t}\n");
-                    }*/
                     String sqlName = className + "Sql";
-                    String sqlUrl = url + s + ".txt";
+                    String sqlUrl = url + "sql.txt";
                     String sqlClass = FileUtils.readFileToString(new File(sqlUrl));
                     String newSqlClass = sqlClass.replaceAll("@tableName", this.tableName).replaceAll("@modelName", className)
                             .replaceAll("@saveValues", String.valueOf(saveValues))

@@ -38,14 +38,16 @@ public interface UserMapper {
 //    int insert(User model);
 
     //动态sql  type:指定一个类    method:使用这个类中的save方法返回的sql字符串  作为sql的语句
-    @InsertProvider(type = com.najiujiangzi.jiangzi.sql.UserSql.class, method = "save")
+
+    @InsertProvider(type = com.najiujiangzi.jiangzi.mappers.sql.UserSql.class, method = "save")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     boolean insert(User model);
 
 //    @Update("update user set name=#{name} where id=#{id}")
 //    int update(UserDTO dto);
 
-    @UpdateProvider(type = com.najiujiangzi.jiangzi.sql.UserSql.class, method = "updateSql")
+
+    @UpdateProvider(type = com.najiujiangzi.jiangzi.mappers.sql.UserSql.class, method = "updateSql")
     boolean update(User model);
 
     @Select("<script>" +

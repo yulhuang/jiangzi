@@ -21,18 +21,12 @@ public class Producer {
     @Value("${isServer}")
     private boolean isServer;
 
-
     /**
      * 发送同步消息
      */
     public void syncProducer() throws Exception {
         //创建消息生产者producer，并制定生产者组名
         DefaultMQProducer producer = createdProducer("group1");
-        //指定NameServer地址
-//        producer.setNamesrvAddr("192.168.2.131:9876");
-        //启动producer
-//        producer.start();
-
         //创建消息对象，指定主题Topic，Tag和消息体
         for (int i = 0; i < 10; i++) {
             Message message = new Message("topic1", "tag1", ("同步发送测试-" + i + "-->" + LocalDateTime.now()).getBytes());

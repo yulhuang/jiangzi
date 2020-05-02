@@ -51,14 +51,14 @@ public class RedisCacheAOP {
         try {
             retrunObj = pjp.proceed();
             //如果该方法的执行结果为null或者Map类型，则直接返回
-            if (retrunObj == null || retrunObj instanceof Map) {
+            if (retrunObj instanceof Map) {
                 return retrunObj;
             } else if (retrunObj instanceof Boolean && (boolean) retrunObj) {
                 //如果返回值等于1，则清空该类下的所有缓存
                 jedis.delKeys(pjp.getSignature().getDeclaringTypeName() + "*");
                 return retrunObj;
             }
-            value = JSON.toJSONString(retrunObj);
+            value = retrunObj == null ? "isNull" : JSON.toJSONString(retrunObj);
         } catch (Throwable throwable) {
             throw new RuntimeException("原方法错误；");
         }
@@ -99,7 +99,7 @@ public class RedisCacheAOP {
                 throw new RuntimeException("该方法返回类型没有加泛型；");
             } else {
                 //如果返回类型不为list类型，则直接将结果转为返回值的类型的对象
-                return JSON.parseObject(value, Class.forName(type.getTypeName()));
+                return value.equals("isNull") ? "" : JSON.parseObject(value, Class.forName(type.getTypeName()));
             }
         } catch (ClassNotFoundException | JSONException var11) {
             throw new RuntimeException("返回数据报错；");

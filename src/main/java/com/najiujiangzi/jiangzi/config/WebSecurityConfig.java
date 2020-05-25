@@ -56,7 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //主页接口和登录接口谁都可以访问
                 .antMatchers("/home/**", "/login/**").permitAll()
                 .antMatchers("/login/test").hasRole("ADMIN")
-                .anyRequest().authenticated() // 其余所有路径都要求用户登陆
+                // 其余所有路径都要求用户登陆
+                .anyRequest().authenticated()
                 .and()
                 //开启登录功能
                 .formLogin()
